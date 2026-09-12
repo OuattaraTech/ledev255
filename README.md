@@ -55,7 +55,21 @@ Les blocs marqués `⚠️ À REMPLACER` contiennent des exemples cohérents ave
 
 ### Remplacer la photo
 
-Déposer le nouveau fichier dans `public/imgs/` et mettre à jour `identity.photo`. Une image carrée d'au moins 1000 × 1000 px donne le meilleur résultat : elle est affichée telle quelle, découpée en cercle, sans traitement.
+Deux fichiers sont utilisés :
+
+- `identity.photo` — l'original, servi comme aperçu pour les réseaux sociaux
+- `identity.photoCut` — la version détourée sur fond transparent, affichée sur le site
+
+Pour changer de photo, déposer le nouveau fichier dans `public/imgs/`, puis générer le détourage :
+
+```bash
+pip install onnxruntime pillow numpy
+python3 scripts/detourer-photo.py public/imgs/ma_photo.jpg
+```
+
+Le script écrit `ma_photo_cut.webp` à côté du fichier source. Il reste à pointer `identity.photo` et `identity.photoCut` sur les deux fichiers. Le modèle de segmentation est téléchargé une seule fois dans `~/.cache/portfolio-cutout/`.
+
+Le fondu vers le bas et sur les côtés qui fait disparaître les épaules dans le fond de la page est géré en CSS, dans la classe `.mask-portrait` de `src/index.css`.
 
 ---
 

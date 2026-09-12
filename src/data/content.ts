@@ -23,7 +23,8 @@ export const identity = {
     "Ingénieur agro-économiste diplômé de l'INP-HB devenu développeur fullstack autodidacte. Je conçois et j'expédie des produits numériques de bout en bout — de la modélisation économique à l'interface finale.",
   location: 'Abidjan, Côte d’Ivoire',
   availability: 'Disponible pour missions & collaborations',
-  photo: '/imgs/photo_profil.jpeg',
+  photo: '/imgs/photo_profil.jpeg', // original, utilisé pour l'aperçu réseaux sociaux
+  photoCut: '/imgs/photo_profil_cut.webp', // détourée, affichée sur le site
 }
 
 /* ⚠️ À REMPLACER — mets tes vrais liens */

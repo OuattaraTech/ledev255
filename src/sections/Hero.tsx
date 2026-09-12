@@ -60,19 +60,19 @@ export default function Hero() {
         <div className="grid items-center gap-10 lg:grid-cols-[1fr_0.92fr] lg:gap-10">
           {/* ── Portrait : au-dessus sur mobile, à droite sur desktop ── */}
           <motion.div
-            className="order-1 mx-auto w-full max-w-[290px] sm:max-w-[380px] lg:order-2 lg:max-w-[520px]"
+            className="order-1 mx-auto w-full max-w-[290px] sm:max-w-[380px] lg:order-2 lg:max-w-[560px]"
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="relative aspect-square overflow-hidden rounded-full">
+            <div className="relative">
               <img
-                src={identity.photo}
+                src={identity.photoCut}
                 alt={`${identity.firstName} ${identity.lastName}, alias ${identity.alias}`}
-                width={1254}
-                height={1254}
+                width={1200}
+                height={1159}
                 decoding="async"
-                className="h-full w-full object-cover"
+                className="mask-portrait h-auto w-full select-none"
               />
             </div>
           </motion.div>

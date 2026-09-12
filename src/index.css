@@ -184,6 +184,29 @@
 }
 
 @layer utilities {
+  /* Le sujet est coupé net par le cadre de la photo : on le dissout
+     vers le bas et sur les côtés pour qu'il se fonde dans la page. */
+  .mask-portrait {
+    --fade-b: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 58%,
+      rgba(0, 0, 0, 0.7) 80%,
+      transparent 100%
+    );
+    --fade-x: linear-gradient(
+      to right,
+      transparent 0%,
+      #000 7%,
+      #000 93%,
+      transparent 100%
+    );
+    -webkit-mask-image: var(--fade-b), var(--fade-x);
+    mask-image: var(--fade-b), var(--fade-x);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
   .mask-fade-b {
     -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
