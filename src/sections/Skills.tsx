@@ -24,10 +24,9 @@ export default function Skills() {
         <div className="mt-14 grid items-center gap-10 lg:mt-20 lg:grid-cols-2 lg:gap-14">
           {/* Globe 3D */}
           <Reveal direction="right" className="order-2 lg:order-1">
-            <div className="relative mx-auto aspect-square w-full max-w-[460px]">
-              <div className="absolute inset-[12%] rounded-full bg-[radial-gradient(circle,rgba(125,85,255,0.22),transparent_65%)] blur-2xl" />
+            <div className="relative mx-auto aspect-square w-full max-w-[580px]">
+              <div className="absolute inset-[22%] rounded-full bg-[radial-gradient(circle,rgba(125,85,255,0.2),transparent_66%)] blur-2xl" />
               <SkillsGlobe className="absolute inset-0" />
-              <div className="pointer-events-none absolute inset-0 rounded-full border border-line/50" />
               <p className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[9px] uppercase tracking-wider text-muted">
                 22 technologies · en rotation permanente
               </p>
