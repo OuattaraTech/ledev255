@@ -213,26 +213,33 @@ export default function Hero() {
             </div>
           ))}
 
-          {/* Compteur en direct : affiché seulement si le serveur répond */}
+          {/* Compteur en direct : affiché seulement si le serveur répond.
+              En ligne sur mobile pour rester lisible, empilé sur grand écran
+              pour s'aligner sur les autres chiffres. */}
           {visitors !== null && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6 }}
-              className="col-span-2 px-4 py-5 text-center sm:py-6 lg:col-span-1"
+              className="col-span-2 flex items-center justify-center gap-2.5 bg-gold-400/[0.08] px-4 py-4
+                         sm:gap-3 sm:py-5 lg:col-span-1 lg:flex-col lg:gap-0 lg:bg-gold-400/[0.04] lg:py-6"
             >
-              <div className="font-display text-2xl font-bold text-gradient sm:text-3xl lg:text-4xl">
+              <span className="relative flex h-2 w-2 shrink-0 lg:hidden">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-400/70" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-400" />
+              </span>
+
+              <span className="font-display text-[1.75rem] font-bold leading-none text-gradient sm:text-3xl lg:text-4xl">
                 <Counter to={visitors} duration={2.2} />
-              </div>
-              <div className="mt-1 flex items-center justify-center gap-1.5">
-                <span className="relative flex h-1.5 w-1.5">
+              </span>
+
+              <span className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-gold-300 sm:text-xs lg:mt-1 lg:text-[10px]">
+                <span className="relative hidden h-1.5 w-1.5 lg:flex">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-400/70" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-gold-400" />
                 </span>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-muted sm:text-[10px]">
-                  Visiteurs
-                </span>
-              </div>
+                Visiteurs
+              </span>
             </motion.div>
           )}
         </motion.div>
