@@ -175,19 +175,56 @@ export default function Contact() {
           {/* Coordonnées */}
           <Reveal direction="left" delay={0.1}>
             <div className="flex h-full flex-col gap-4">
-              <button
-                onClick={copyEmail}
-                className="group grad-border rounded-3xl glass p-6 text-left transition-colors duration-500 sm:p-7"
-                data-cursor="grow"
-              >
-                <span className="eyebrow">Email direct</span>
-                <p className="mt-2 break-all font-display text-lg font-medium text-chalk sm:text-xl">
-                  {contact.email}
-                </p>
-                <span className="mt-3 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-gold-400">
-                  {copied ? '✓ Copié' : 'Cliquer pour copier'}
-                </span>
-              </button>
+              <div className="grad-border rounded-3xl glass p-6 sm:p-7">
+                <span className="eyebrow">Contact direct</span>
+
+                <div className="mt-4">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-muted">
+                    Email
+                  </p>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <a
+                      href={`mailto:${contact.email}`}
+                      className="break-all font-display text-base font-medium text-chalk transition-colors hover:text-gold-300 sm:text-lg"
+                    >
+                      {contact.email}
+                    </a>
+                    <button
+                      onClick={copyEmail}
+                      aria-label="Copier l’adresse email"
+                      className="shrink-0 rounded-full border border-line px-2.5 py-1 font-mono text-[9px] uppercase tracking-wider text-gold-400 transition-colors hover:border-gold-400/50"
+                      data-cursor="grow"
+                    >
+                      {copied ? '✓ copié' : 'copier'}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="my-4 hairline" />
+
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-muted">
+                    Téléphone
+                  </p>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <a
+                      href={`tel:${contact.phone}`}
+                      className="font-display text-base font-medium text-chalk transition-colors hover:text-gold-300 sm:text-lg"
+                    >
+                      {contact.phoneDisplay}
+                    </a>
+                    <a
+                      href={contact.whatsapp}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-wider text-emerald-300 transition-colors hover:border-emerald-400/60"
+                      data-cursor="grow"
+                    >
+                      WhatsApp
+                    </a>
+                  </div>
+                </div>
+              </div>
 
               <div className="grad-border rounded-3xl glass p-6 sm:p-7">
                 <span className="eyebrow">Réseaux</span>

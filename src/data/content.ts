@@ -27,19 +27,27 @@ export const identity = {
   photoCut: '/imgs/photo_profil_cut.webp', // détourée, affichée sur le site
 }
 
-/* ⚠️ À REMPLACER — mets tes vrais liens */
 export const socials = [
-  { label: 'GitHub', short: 'GH', url: 'https://github.com/ledev255' },
-  { label: 'LinkedIn', short: 'IN', url: 'https://www.linkedin.com/in/ouattara-yaya' },
-  { label: 'X / Twitter', short: 'X', url: 'https://x.com/ledev255' },
-  { label: 'WhatsApp', short: 'WA', url: 'https://wa.me/2250000000000' },
+  {
+    label: 'LinkedIn',
+    short: 'IN',
+    url: 'https://www.linkedin.com/in/yaya-ouattara-5620b934a',
+  },
+  { label: 'WhatsApp', short: 'WA', url: 'https://wa.me/message/7YUNZIZGUYNNE1' },
+  {
+    label: 'Facebook',
+    short: 'FB',
+    url: 'https://www.facebook.com/share/1Dc4uznhiD/',
+  },
+  // ⚠️ Ajoute ton GitHub ici quand le dépôt du portfolio sera en ligne :
+  // { label: 'GitHub', short: 'GH', url: 'https://github.com/<ton-pseudo>' },
 ]
 
-/* ⚠️ À REMPLACER — ton email de contact */
 export const contact = {
-  email: 'contact@ledev255.dev',
-  phoneDisplay: '+225 00 00 00 00 00',
-  calendly: '',
+  email: 'yayaouattara7875@gmail.com',
+  phone: '+2250779667543',
+  phoneDisplay: '+225 07 79 66 75 43',
+  whatsapp: 'https://wa.me/message/7YUNZIZGUYNNE1',
 }
 
 /* ⚠️ À AJUSTER — seuls le nombre de projets et « autodidacte » sont vérifiés */
