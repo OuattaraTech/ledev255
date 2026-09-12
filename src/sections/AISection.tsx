@@ -7,7 +7,15 @@ export default function AISection() {
   return (
     <section id="ia" className="relative overflow-hidden py-20 sm:py-28 lg:py-36">
       {/* Hélice de données en fond */}
-      <DataHelix className="pointer-events-none absolute -right-24 top-1/2 hidden h-[720px] w-[520px] -translate-y-1/2 opacity-70 lg:block" />
+      {/* Deux brins qui encadrent la section sur grand écran */}
+      <DataHelix
+        phase={0}
+        className="pointer-events-none absolute -right-20 top-1/2 hidden h-[760px] w-[520px] -translate-y-1/2 opacity-70 lg:block"
+      />
+      <DataHelix
+        phase={2.4}
+        className="pointer-events-none absolute -left-20 top-1/2 hidden h-[760px] w-[520px] -translate-y-1/2 -scale-x-100 opacity-55 lg:block"
+      />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-400/30 to-transparent" />
       <div className="pointer-events-none absolute -left-32 top-1/3 h-96 w-96 rounded-full bg-[radial-gradient(circle,rgba(245,196,81,0.1),transparent_65%)] blur-3xl" />
 
@@ -20,7 +28,8 @@ export default function AISection() {
         />
 
         {/* Hélice visible sur mobile, sous le titre */}
-        <div className="relative mt-10 h-56 lg:hidden">
+        <div className="relative mt-8 h-[360px] sm:h-[440px] lg:hidden">
+          <div className="pointer-events-none absolute inset-x-[15%] inset-y-[8%] rounded-full bg-[radial-gradient(ellipse,rgba(125,85,255,0.2),transparent_68%)] blur-2xl" />
           <DataHelix className="pointer-events-none absolute inset-0" />
         </div>
 
