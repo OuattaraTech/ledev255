@@ -126,8 +126,8 @@ export const skills: SkillGroup[] = [
       { name: 'Supabase', level: 90 },
       { name: 'PostgreSQL', level: 86 },
       { name: 'SQL avancé', level: 82 },
-      { name: 'Node.js', level: 78 },
-      { name: 'Python', level: 76 },
+      { name: 'Node.js', level: 86 },
+      { name: 'Python', level: 84 },
       { name: 'REST & temps réel', level: 84 },
     ],
   },
@@ -150,7 +150,7 @@ export const skillNodes = [
   'Flutter', 'Dart', 'Supabase', 'PostgreSQL', 'JavaScript', 'TypeScript',
   'React', 'Node.js', 'Python', 'HTML', 'CSS', 'Tailwind',
   'TensorFlow Lite', 'MapTiler', 'OpenStreetMap', 'OCR',
-  'Git', 'Docker', 'Netlify', 'Cloudflare', 'SQL', 'REST',
+  'Git', 'ReportLab', 'Netlify', 'Cloudflare', 'SQL', 'REST',
 ]
 
 /* ─────────────────────────── IA & PRODUCTIVITÉ ─────────────────────────── */
@@ -215,8 +215,7 @@ export const projects: Project[] = [
       "Application cloud tout-en-un de gestion et de comptabilité pour les TPE et PME ivoiriennes, avec assistant IA intégré.",
     description:
       "ApeX est pensée pour le marché ivoirien, pas adaptée après coup. Elle couvre la gestion commerciale, les stocks, la paie, la trésorerie, le CRM et la gestion de projet dans une seule application, et génère la comptabilité au fil de l'eau. Chaque vente et chaque dépense produit ses écritures aux normes SYSCOHADA, jusqu'à la préparation de la liasse fiscale DSF. Les factures sont validées instantanément par la certification DGI / FNE, les encaissements passent par Mobile Money, et les pièces fournisseurs se saisissent en photo grâce à l'OCR.",
-    // ⚠️ À COMPLÉTER — indique-moi les technologies utilisées
-    stack: [],
+    stack: ['HTML', 'CSS', 'JavaScript', 'Node.js', 'Python', 'PostgreSQL', 'ReportLab'],
     highlights: [
       'Certification fiscale DGI / FNE : factures normalisées validées instantanément',
       'Écritures SYSCOHADA générées automatiquement, jusqu’à la liasse fiscale DSF',
@@ -305,8 +304,7 @@ export const ongoing = [
     progress: 45,
     eta: '',
     text: "ERP agricole qui digitalise toute la chaîne d'une coopérative d'anacarde, de l'achat au producteur jusqu'à l'exportation. Une application mobile pour les pisteurs — collecte hors-ligne, pesée, paiement — et une application web pour la coopérative : stocks, qualité, trésorerie, comptabilité OHADA, ventes et rapports. Un outil clé en main qui remplace Excel et le papier, sécurise les flux financiers et garantit la traçabilité.",
-    // ⚠️ À COMPLÉTER — indique-moi les technologies utilisées
-    stack: [],
+    stack: ['HTML', 'CSS', 'JavaScript', 'Node.js', 'Python', 'PostgreSQL', 'ReportLab'],
   },
 ]
 
