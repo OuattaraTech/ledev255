@@ -39,8 +39,7 @@ export const socials = [
     short: 'FB',
     url: 'https://www.facebook.com/share/1Dc4uznhiD/',
   },
-  // ⚠️ Ajoute ton GitHub ici quand le dépôt du portfolio sera en ligne :
-  // { label: 'GitHub', short: 'GH', url: 'https://github.com/<ton-pseudo>' },
+  { label: 'GitHub', short: 'GH', url: 'https://github.com/OuattaraTech' },
 ]
 
 export const contact = {
