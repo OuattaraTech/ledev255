@@ -45,7 +45,7 @@ export const contact = {
 /* ⚠️ À AJUSTER — seuls le nombre de projets et « autodidacte » sont vérifiés */
 export const stats = [
   { value: 5, suffix: '+', label: "Années à coder" },
-  { value: 5, suffix: '', label: 'Projets construits' },
+  { value: 6, suffix: '', label: 'Projets construits' },
   { value: 12, suffix: '', label: 'Outils IA maîtrisés' },
   { value: 100, suffix: '%', label: 'Autodidacte' },
 ]
@@ -246,6 +246,26 @@ export const projects: Project[] = [
     ],
     links: {},
     accent: 'violet',
+    featured: true,
+  },
+  {
+    id: 'cnyts',
+    title: 'Cnyts',
+    category: 'Application interne de gestion',
+    monogram: 'CN',
+    summary:
+      "Application de gestion interne des opérations financières et de suivi de la performance du personnel.",
+    description:
+      "Cnyts réunit deux besoins d'entreprise dans une seule application mobile : le suivi des opérations financières internes d'un côté, le suivi de la performance du personnel de l'autre. Les données sont centralisées et consultables en temps réel, ce qui remplace les tableurs partagés et les remontées d'information dispersées.",
+    // ⚠️ À ENRICHIR — ajoute les fonctions marquantes et un chiffre si tu en as un
+    highlights: [
+      'Enregistrement et suivi des opérations financières internes',
+      'Suivi de la performance des collaborateurs',
+      'Données centralisées et consultables en temps réel',
+    ],
+    stack: ['Flutter', 'Supabase'],
+    links: {},
+    accent: 'mixed',
     featured: true,
   },
   {
