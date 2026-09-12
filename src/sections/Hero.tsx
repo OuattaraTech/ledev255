@@ -1,7 +1,6 @@
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import HeroScene, { PORTRAIT_ANCHOR_ID } from '../components/three/HeroScene'
-import PortraitOrb from '../components/three/PortraitOrb'
+import HeroScene from '../components/three/HeroScene'
 import { Counter, Magnetic, Marquee } from '../components/primitives'
 import { identity, socials, stats } from '../data/content'
 import { useReducedMotion } from '../hooks/useMediaQuery'
@@ -58,59 +57,23 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-56 bg-gradient-to-t from-void via-void/80 to-transparent" />
 
       <motion.div style={{ y, opacity, scale }} className="container-x relative">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+        <div className="grid items-center gap-10 lg:grid-cols-[1fr_0.92fr] lg:gap-10">
           {/* ── Portrait : au-dessus sur mobile, à droite sur desktop ── */}
           <motion.div
-            className="order-1 mx-auto w-full max-w-[280px] sm:max-w-[340px] lg:order-2 lg:max-w-[480px]"
-            initial={{ opacity: 0, scale: 0.86 }}
+            className="order-1 mx-auto w-full max-w-[290px] sm:max-w-[380px] lg:order-2 lg:max-w-[520px]"
+            initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.1, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div id={PORTRAIT_ANCHOR_ID} className="relative aspect-square">
-              {/* halos */}
-              <div className="absolute inset-[14%] rounded-full bg-[radial-gradient(circle,rgba(125,85,255,0.4),transparent_68%)] blur-2xl" />
-              <div className="absolute inset-[18%] rounded-full bg-[radial-gradient(circle,rgba(245,196,81,0.2),transparent_60%)] blur-3xl" />
-
-              <PortraitOrb className="absolute inset-[10%]" />
-
-              {/* anneau de texte tournant */}
-              <div className="pointer-events-none absolute inset-0 animate-spin-slower">
-                <svg viewBox="0 0 200 200" className="h-full w-full opacity-70">
-                  <defs>
-                    <path
-                      id="circlePath"
-                      d="M 100,100 m -94,0 a 94,94 0 1,1 188,0 a 94,94 0 1,1 -188,0"
-                      fill="none"
-                    />
-                  </defs>
-                  <text
-                    fill="#f5c451"
-                    fontSize="6.4"
-                    letterSpacing="3.9"
-                    fontFamily="'JetBrains Mono', monospace"
-                  >
-                    <textPath href="#circlePath" startOffset="0%">
-                      FULLSTACK · AI-AUGMENTED · AGRO-ÉCONOMISTE · ENTREPRENEUR ·
-                    </textPath>
-                  </text>
-                </svg>
-              </div>
-
-              {/* pastille disponibilité */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 }}
-                className="absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full glass-strong px-3.5 py-1.5 sm:bottom-2"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                </span>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-chalk/85 sm:text-[10px]">
-                  Disponible
-                </span>
-              </motion.div>
+            <div className="relative aspect-square overflow-hidden rounded-full">
+              <img
+                src={identity.photo}
+                alt={`${identity.firstName} ${identity.lastName}, alias ${identity.alias}`}
+                width={1254}
+                height={1254}
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
             </div>
           </motion.div>
 
@@ -120,11 +83,22 @@ export default function Hero() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15 }}
-              className="inline-flex items-center gap-2 rounded-full glass px-3.5 py-1.5"
+              className="flex flex-wrap items-center justify-center gap-2 lg:justify-start"
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-gold-400" />
-              <span className="font-mono text-[10px] uppercase tracking-wider text-chalk/80">
-                {identity.location}
+              <span className="inline-flex items-center gap-2 rounded-full glass px-3.5 py-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-gold-400" />
+                <span className="font-mono text-[10px] uppercase tracking-wider text-chalk/80">
+                  {identity.location}
+                </span>
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full glass px-3.5 py-1.5">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-wider text-chalk/80">
+                  Disponible
+                </span>
               </span>
             </motion.div>
 

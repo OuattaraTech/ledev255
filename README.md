@@ -55,7 +55,7 @@ Les blocs marqués `⚠️ À REMPLACER` contiennent des exemples cohérents ave
 
 ### Remplacer la photo
 
-Déposer le nouveau fichier dans `public/imgs/` et mettre à jour `identity.photo`. Une image carrée d'au moins 1000 × 1000 px donne le meilleur résultat : elle est découpée en cercle et traitée par un shader.
+Déposer le nouveau fichier dans `public/imgs/` et mettre à jour `identity.photo`. Une image carrée d'au moins 1000 × 1000 px donne le meilleur résultat : elle est affichée telle quelle, découpée en cercle, sans traitement.
 
 ---
 
@@ -115,7 +115,7 @@ src/
 ├── data/content.ts        ← tout le contenu éditorial
 ├── sections/              ← les sept sections de la page
 ├── components/
-│   ├── three/             ← scènes WebGL (portrait, nébuleuse, globe, hélice, aurore)
+│   ├── three/             ← scènes WebGL (nébuleuse, globe, hélice, aurore)
 │   ├── primitives.tsx     ← briques d'animation réutilisables
 │   ├── Nav.tsx  Preloader.tsx  Cursor.tsx  SmoothScroll.tsx
 ├── hooks/                 ← media queries, visibilité

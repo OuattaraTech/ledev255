@@ -11,7 +11,6 @@ export default defineConfig({
         manualChunks: {
           three: ['three'],
           r3f: ['@react-three/fiber', '@react-three/drei'],
-          post: ['postprocessing', '@react-three/postprocessing'],
           motion: ['framer-motion'],
         },
       },
