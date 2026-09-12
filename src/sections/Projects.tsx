@@ -13,12 +13,13 @@ const accentMap = {
 /** Visuel génératif : pas de capture d'écran, une identité par projet. */
 function ProjectVisual({ project, tall = false }: { project: Project; tall?: boolean }) {
   const a = accentMap[project.accent]
-  // Monogramme lisible : initiales des mots, sinon deux premières lettres.
+  // Sigle explicite si fourni, sinon initiales des mots du titre.
   const words = project.title.split(/\s+/).filter((w) => /[A-Za-zÀ-ÿ]/.test(w))
   const initials = (
-    words.length > 1
+    project.monogram ??
+    (words.length > 1
       ? words.map((w) => w[0]).join('').slice(0, 3)
-      : (words[0] ?? project.title).slice(0, 2)
+      : (words[0] ?? project.title).slice(0, 2))
   ).toUpperCase()
 
   return (
@@ -55,9 +56,11 @@ function ProjectVisual({ project, tall = false }: { project: Project; tall?: boo
       </span>
 
       {/* badge année */}
-      <span className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/30 px-2.5 py-1 font-mono text-[10px] text-white/80 backdrop-blur-sm">
-        {project.year}
-      </span>
+      {project.year && (
+        <span className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/30 px-2.5 py-1 font-mono text-[10px] text-white/80 backdrop-blur-sm">
+          {project.year}
+        </span>
+      )}
 
       {/* stack flottante */}
       <div className="absolute inset-x-4 bottom-4 flex flex-wrap gap-1.5">
@@ -152,14 +155,24 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
             </div>
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              {project.links.site && (
+                <a
+                  href={project.links.site}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="btn-primary flex-1"
+                >
+                  Site officiel ↗
+                </a>
+              )}
               {project.links.demo && (
                 <a
                   href={project.links.demo}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="btn-primary flex-1"
+                  className={`flex-1 ${project.links.site ? 'btn-ghost' : 'btn-primary'}`}
                 >
-                  Voir la démo ↗
+                  Ouvrir l’application ↗
                 </a>
               )}
               {project.links.repo && (
@@ -282,7 +295,15 @@ export default function Projects() {
               </div>
             </Reveal>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+            <div
+              className={`mt-6 grid gap-4 sm:gap-5 ${
+                others.length >= 3
+                  ? 'sm:grid-cols-2 lg:grid-cols-3'
+                  : others.length === 2
+                    ? 'sm:grid-cols-2'
+                    : 'mx-auto w-full max-w-xl'
+              }`}
+            >
               {others.map((p, i) => (
                 <Reveal key={p.id} delay={i * 0.08}>
                   <TiltCard className="group h-full rounded-2xl" intensity={6}>
@@ -295,7 +316,9 @@ export default function Projects() {
                         <span className="font-mono text-[10px] uppercase tracking-wider text-violet-300/80">
                           {p.category}
                         </span>
-                        <span className="font-mono text-[10px] text-muted">{p.year}</span>
+                        {p.year && (
+                          <span className="font-mono text-[10px] text-muted">{p.year}</span>
+                        )}
                       </div>
                       <h4 className="mt-3 font-display text-lg font-semibold text-chalk">
                         {p.title}

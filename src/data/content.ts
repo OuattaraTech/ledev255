@@ -42,9 +42,10 @@ export const contact = {
   calendly: '',
 }
 
+/* ⚠️ À AJUSTER — seuls le nombre de projets et « autodidacte » sont vérifiés */
 export const stats = [
   { value: 5, suffix: '+', label: "Années à coder" },
-  { value: 25, suffix: '+', label: 'Projets livrés' },
+  { value: 5, suffix: '', label: 'Projets construits' },
   { value: 12, suffix: '', label: 'Outils IA maîtrisés' },
   { value: 100, suffix: '%', label: 'Autodidacte' },
 ]
@@ -89,67 +90,67 @@ export type SkillGroup = {
   items: { name: string; level: number }[]
 }
 
+/* ⚠️ Les pourcentages sont indicatifs : ajuste-les à ton ressenti réel. */
 export const skills: SkillGroup[] = [
   {
-    key: 'front',
-    title: 'Frontend',
-    subtitle: "Interfaces rapides, accessibles et animées",
+    key: 'mobile',
+    title: 'Mobile',
+    subtitle: 'Applications terrain, y compris hors-ligne',
     items: [
-      { name: 'React', level: 92 },
-      { name: 'TypeScript', level: 88 },
-      { name: 'Next.js', level: 85 },
-      { name: 'Tailwind CSS', level: 94 },
-      { name: 'Three.js / R3F', level: 78 },
-      { name: 'Framer Motion', level: 86 },
+      { name: 'Flutter', level: 90 },
+      { name: 'Dart', level: 88 },
+      { name: 'Mode hors-ligne', level: 85 },
+      { name: 'Cartographie', level: 82 },
+      { name: 'TensorFlow Lite', level: 72 },
+      { name: 'Publication stores', level: 78 },
+    ],
+  },
+  {
+    key: 'web',
+    title: 'Web',
+    subtitle: 'Interfaces rapides et lisibles',
+    items: [
+      { name: 'JavaScript', level: 90 },
+      { name: 'TypeScript', level: 82 },
+      { name: 'React', level: 84 },
+      { name: 'HTML / CSS', level: 92 },
+      { name: 'Tailwind CSS', level: 88 },
+      { name: 'Three.js / R3F', level: 68 },
     ],
   },
   {
     key: 'back',
-    title: 'Backend',
+    title: 'Backend & Données',
     subtitle: 'APIs solides, données cohérentes',
     items: [
-      { name: 'Node.js', level: 88 },
-      { name: 'Express / Fastify', level: 84 },
-      { name: 'Python / FastAPI', level: 82 },
-      { name: 'PostgreSQL', level: 85 },
-      { name: 'Supabase', level: 87 },
-      { name: 'REST & WebSocket', level: 86 },
+      { name: 'Supabase', level: 90 },
+      { name: 'PostgreSQL', level: 86 },
+      { name: 'SQL avancé', level: 82 },
+      { name: 'Node.js', level: 78 },
+      { name: 'Python', level: 76 },
+      { name: 'REST & temps réel', level: 84 },
     ],
   },
   {
-    key: 'infra',
-    title: 'Infra & DevOps',
-    subtitle: 'Livrer vite, livrer sûr',
-    items: [
-      { name: 'Git / GitHub', level: 90 },
-      { name: 'Docker', level: 76 },
-      { name: 'Cloudflare Pages', level: 88 },
-      { name: 'Vercel / Netlify', level: 86 },
-      { name: 'CI/CD Actions', level: 78 },
-      { name: 'Linux', level: 80 },
-    ],
-  },
-  {
-    key: 'data',
-    title: 'Data & Analyse',
+    key: 'metier',
+    title: 'Métier & Conformité',
     subtitle: "L'héritage agro-économiste",
     items: [
-      { name: 'Économétrie', level: 88 },
-      { name: 'Pandas / NumPy', level: 82 },
-      { name: 'Data Viz', level: 84 },
-      { name: 'SQL avancé', level: 83 },
-      { name: 'Modélisation', level: 86 },
-      { name: 'Power BI', level: 74 },
+      { name: 'Comptabilité SYSCOHADA', level: 85 },
+      { name: 'Fiscalité DGI / FNE', level: 82 },
+      { name: 'Paie CNPS', level: 78 },
+      { name: 'Filières agricoles', level: 90 },
+      { name: 'Économétrie', level: 86 },
+      { name: 'Mobile Money', level: 84 },
     ],
   },
 ]
 
-/* Nœuds affichés dans la sphère 3D des compétences */
 export const skillNodes = [
-  'React', 'TypeScript', 'Next.js', 'Node.js', 'Python', 'PostgreSQL',
-  'Supabase', 'Tailwind', 'Three.js', 'Docker', 'Git', 'FastAPI',
-  'Cloudflare', 'Vite', 'Prisma', 'Redis', 'Figma', 'Linux',
-  'Pandas', 'SQL', 'REST', 'GraphQL',
+  'Flutter', 'Dart', 'Supabase', 'PostgreSQL', 'JavaScript', 'TypeScript',
+  'React', 'Node.js', 'Python', 'HTML', 'CSS', 'Tailwind',
+  'TensorFlow Lite', 'MapTiler', 'OpenStreetMap', 'OCR',
+  'Git', 'Docker', 'Netlify', 'Cloudflare', 'SQL', 'REST',
 ]
 
 /* ─────────────────────────── IA & PRODUCTIVITÉ ─────────────────────────── */
@@ -186,14 +187,15 @@ export const aiMetrics = [
   { label: 'Reporting mensuel', before: 'Manuel', after: 'Automatisé' },
 ]
 
-/* ─────────────────────────── PROJETS ───────────────────────────
-   ⚠️ À REMPLACER — ce sont des EXEMPLES cohérents avec ton profil.
-   Mets tes vrais projets, tes vrais liens et tes vrais chiffres. */
+/* ─────────────────────────── PROJETS ─────────────────────────── */
 export type Project = {
   id: string
   title: string
   category: string
-  year: string
+  /** Laisser vide si l'année n'est pas pertinente : le badge disparaît. */
+  year?: string
+  /** Sigle affiché en filigrane sur la vignette. Déduit du titre si absent. */
+  monogram?: string
   summary: string
   description: string
   stack: string[]
@@ -205,119 +207,86 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    id: 'agrimarket',
-    title: 'AgriMarket 255',
-    category: 'Marketplace AgriTech',
-    year: '2024',
+    id: 'apex',
+    title: 'ApeX',
+    category: 'SaaS Gestion & Comptabilité',
+    monogram: 'AX',
     summary:
-      "Plateforme reliant producteurs agricoles et acheteurs, avec cotations en temps réel et paiement mobile money.",
+      "Application cloud tout-en-un de gestion et de comptabilité pour les TPE et PME ivoiriennes, avec assistant IA intégré.",
     description:
-      "Une marketplace pensée pour le terrain ivoirien : catalogue produits, cotations quotidiennes par filière, mise en relation directe producteur-acheteur, paiement mobile money et tableau de bord vendeur. Le moteur de prix s'appuie sur des séries historiques et un modèle de tendance issu de ma formation d'agro-économiste.",
-    stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind', 'Stripe'],
+      "ApeX est pensée pour le marché ivoirien, pas adaptée après coup. Elle couvre la gestion commerciale, les stocks, la paie, la trésorerie, le CRM et la gestion de projet dans une seule application, et génère la comptabilité au fil de l'eau. Chaque vente et chaque dépense produit ses écritures aux normes SYSCOHADA, jusqu'à la préparation de la liasse fiscale DSF. Les factures sont validées instantanément par la certification DGI / FNE, les encaissements passent par Mobile Money, et les pièces fournisseurs se saisissent en photo grâce à l'OCR.",
+    // ⚠️ À COMPLÉTER — indique-moi les technologies utilisées
+    stack: [],
     highlights: [
-      'Cotations temps réel par filière',
-      'Paiement mobile money intégré',
-      'Dashboard vendeur avec analytics',
+      'Certification fiscale DGI / FNE : factures normalisées validées instantanément',
+      'Écritures SYSCOHADA générées automatiquement, jusqu’à la liasse fiscale DSF',
+      'Encaissements Wave, Orange Money et MTN MoMo, lien de paiement envoyé par WhatsApp',
+      'Saisie des factures fournisseurs par photo, sans ressaisie manuelle (OCR)',
+      'Paie aux normes CNPS, congés et taxes sur salaire (ITS)',
+      'Stocks multi-entrepôts et trésorerie prévisionnelle',
     ],
-    links: { demo: '#', repo: '#' },
+    links: { site: 'https://useapex.ci/', demo: 'https://app.useapex.ci' },
     accent: 'gold',
     featured: true,
   },
   {
-    id: 'dataviz-filieres',
-    title: 'FilièreScope',
-    category: 'Data & Visualisation',
-    year: '2024',
+    id: 'masjid-finder',
+    title: 'Masjid Finder',
+    category: 'Application mobile communautaire',
+    monogram: 'MF',
     summary:
-      "Tableau de bord d'analyse des filières agricoles : production, prix, export, projections.",
+      "Connecte les musulmans aux mosquées autour d'eux : horaires de prière validés localement et itinéraire GPS immédiat.",
     description:
-      "Un outil d'aide à la décision qui agrège les données publiques et privées de plusieurs filières agricoles. Cartes interactives, séries temporelles, comparateurs régionaux et export de rapports PDF automatisés. Le pipeline de données est entièrement scripté en Python.",
-    stack: ['React', 'D3.js', 'FastAPI', 'Python', 'Pandas', 'PostgreSQL'],
+      "Masjid Finder combine les données ouvertes d'OpenStreetMap et l'engagement de la communauté. Des points focaux valident localement les horaires de prière, ce qui règle le problème des données génériques et souvent fausses. L'application reste volontairement simple : trouver une mosquée proche, connaître l'heure exacte de la prochaine prière, et lancer l'itinéraire.",
+    stack: ['Flutter', 'Supabase', 'PostgreSQL', 'MapTiler'],
     highlights: [
-      'Pipeline ETL automatisé',
-      'Cartographie interactive',
-      'Rapports PDF générés à la demande',
+      'Horaires de prière validés par des points focaux locaux',
+      'Recensement des mosquées appuyé sur OpenStreetMap',
+      'Itinéraire GPS lancé en un geste',
     ],
-    links: { demo: '#', repo: '#' },
+    links: {},
     accent: 'violet',
     featured: true,
   },
   {
-    id: 'ai-assistant',
-    title: 'Nexa Assist',
-    category: 'IA & Automatisation',
-    year: '2025',
+    id: 'generateur-qrcode',
+    title: 'Générateur de QR Code',
+    category: 'Outil web',
+    monogram: 'QR',
     summary:
-      "Assistant IA d'entreprise branché sur les documents internes, avec recherche sémantique et réponses sourcées.",
+      "Génère un QR code à partir d'un texte, d'une fiche de contact ou d'une adresse de site web.",
     description:
-      "Un assistant conversationnel privé pour PME : ingestion de documents (PDF, Word, tableurs), découpage sémantique, base vectorielle, et réponses toujours accompagnées de leurs sources. Interface temps réel en streaming, gestion des rôles et historique des conversations.",
-    stack: ['Next.js', 'Claude API', 'LangChain', 'pgvector', 'Supabase', 'Vercel'],
+      "Un outil volontairement minimal, écrit en JavaScript natif, sans framework ni build. On choisit le type de contenu, on saisit, le QR code apparaît. Hébergé en statique, il se charge instantanément.",
+    stack: ['HTML', 'CSS', 'JavaScript'],
     highlights: [
-      'RAG avec réponses sourcées',
-      'Streaming temps réel',
-      'Multi-tenant avec rôles',
+      'Trois formats : texte, fiche de contact, adresse web',
+      'JavaScript natif, sans framework',
     ],
-    links: { demo: '#', repo: '#' },
+    links: { demo: 'https://generateur-qrcode.netlify.app/' },
     accent: 'mixed',
-    featured: true,
-  },
-  {
-    id: 'gestion-coop',
-    title: 'CoopManager',
-    category: 'SaaS Métier',
-    year: '2023',
-    summary:
-      "Logiciel de gestion pour coopératives agricoles : membres, collectes, stocks, trésorerie.",
-    description:
-      "Une application complète de gestion coopérative : registre des membres, suivi des collectes par campagne, gestion des stocks et magasins, trésorerie et répartition des ristournes. Fonctionne en mode dégradé hors-ligne, indispensable en zone rurale.",
-    stack: ['React', 'Node.js', 'PostgreSQL', 'Prisma', 'PWA', 'Docker'],
-    highlights: ['Mode hors-ligne (PWA)', 'Multi-campagnes', 'Calcul automatique des ristournes'],
-    links: { repo: '#' },
-    accent: 'violet',
-    featured: false,
-  },
-  {
-    id: 'landing-factory',
-    title: 'Landing Factory',
-    category: 'Produit Digital',
-    year: '2025',
-    summary:
-      "Générateur de landing pages performantes, assemblées par IA à partir d'un simple brief.",
-    description:
-      "Un produit SaaS qui transforme un brief textuel en landing page complète et déployable : structure, copie, visuels et thème générés puis éditables en direct. Export vers Cloudflare Pages en un clic.",
-    stack: ['Next.js', 'OpenAI API', 'Tailwind', 'Cloudflare', 'Supabase'],
-    highlights: ['Génération en < 60 s', 'Éditeur visuel', 'Déploiement 1-clic'],
-    links: { demo: '#' },
-    accent: 'gold',
     featured: false,
   },
 ]
 
-/* ⚠️ À REMPLACER — tes projets réellement en cours */
+/* ─────────────────────────── PROJETS EN COURS ───────────────────────────
+   ⚠️ Les pourcentages d'avancement et les échéances sont à ajuster. */
 export const ongoing = [
   {
-    title: 'Plateforme de traçabilité cacao',
+    title: 'AgroLink',
     status: 'En développement',
-    progress: 65,
-    eta: 'T2 2026',
-    text: "Traçabilité de la parcelle à l'export : géolocalisation des parcelles, carnet de collecte numérique et conformité aux exigences de déforestation zéro.",
-    stack: ['Next.js', 'PostGIS', 'Mapbox', 'Supabase'],
+    progress: 55,
+    eta: '',
+    text: "Super-app agricole tout-en-un pour les producteurs ivoiriens : diagnostic des maladies des cultures par IA depuis une photo, prix du marché en direct, mise en relation producteur-acheteur et alertes météo.",
+    stack: ['Flutter', 'Supabase', 'TensorFlow Lite'],
   },
   {
-    title: 'Agent IA de veille sectorielle',
-    status: 'Bêta privée',
-    progress: 80,
-    eta: 'T1 2026',
-    text: "Un agent autonome qui surveille les sources sectorielles, résume les signaux faibles et livre une note hebdomadaire directement en boîte mail.",
-    stack: ['Claude API', 'n8n', 'Python', 'Postgres'],
-  },
-  {
-    title: 'LE DEV255 — Academy',
-    status: 'Conception',
-    progress: 30,
-    eta: 'T3 2026',
-    text: "Programme de formation pour développeurs francophones : apprendre à construire et expédier des produits web en s'appuyant sur l'IA.",
-    stack: ['Astro', 'MDX', 'Stripe', 'Cloudflare'],
+    title: 'KernSys',
+    status: 'En développement',
+    progress: 45,
+    eta: '',
+    text: "ERP agricole qui digitalise toute la chaîne d'une coopérative d'anacarde, de l'achat au producteur jusqu'à l'exportation. Une application mobile pour les pisteurs — collecte hors-ligne, pesée, paiement — et une application web pour la coopérative : stocks, qualité, trésorerie, comptabilité OHADA, ventes et rapports. Un outil clé en main qui remplace Excel et le papier, sécurise les flux financiers et garantit la traçabilité.",
+    // ⚠️ À COMPLÉTER — indique-moi les technologies utilisées
+    stack: [],
   },
 ]
 

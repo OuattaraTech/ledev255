@@ -22,7 +22,11 @@ export default function Ongoing() {
           description="Ce qui sort de l’atelier en ce moment. Ces produits évoluent chaque semaine — les pourcentages bougent, les idées aussi."
         />
 
-        <div className="mt-14 grid gap-4 sm:mt-18 sm:gap-5 lg:grid-cols-3">
+        <div
+          className={`mt-14 grid gap-4 sm:mt-18 sm:gap-5 ${
+            ongoing.length >= 3 ? 'lg:grid-cols-3' : 'sm:grid-cols-2'
+          }`}
+        >
           {ongoing.map((o, i) => (
             <Reveal key={o.title} delay={i * 0.1}>
               <article className="grad-border group relative flex h-full flex-col overflow-hidden rounded-3xl glass p-6 sm:p-7">
@@ -43,7 +47,9 @@ export default function Ongoing() {
                   >
                     {o.status}
                   </span>
-                  <span className="font-mono text-[10px] text-muted">ETA {o.eta}</span>
+                  {o.eta && (
+                    <span className="font-mono text-[10px] text-muted">ETA {o.eta}</span>
+                  )}
                 </div>
 
                 <h3 className="relative mt-5 font-display text-xl font-semibold leading-snug text-chalk">

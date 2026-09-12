@@ -215,17 +215,17 @@ export default function Hero() {
       <div className="relative mt-10 border-y border-line/60 py-3 sm:mt-14">
         <Marquee
           items={[
-            'React',
-            'TypeScript',
-            'Node.js',
-            'Next.js',
-            'Python',
-            'PostgreSQL',
-            'Three.js',
+            'Flutter',
+            'Dart',
             'Supabase',
+            'PostgreSQL',
+            'JavaScript',
+            'TypeScript',
+            'React',
+            'Python',
+            'TensorFlow Lite',
             'Claude Code',
             'n8n',
-            'Docker',
             'Cloudflare',
           ]}
         />
