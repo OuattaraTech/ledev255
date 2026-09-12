@@ -305,7 +305,7 @@ export function Counter({
 
   return (
     <span ref={ref} className={className}>
-      {val}
+      {val.toLocaleString('fr-FR')}
       {suffix}
     </span>
   )

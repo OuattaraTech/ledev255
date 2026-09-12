@@ -16,9 +16,11 @@ npm run dev      # http://localhost:5173
 Autres commandes :
 
 ```bash
-npm run build      # génère dist/
-npm run preview    # sert le build de production
-npm run typecheck  # vérification TypeScript
+npm run build       # génère dist/
+npm run preview     # sert le build de production
+npm run preview:cf  # idem, mais avec les fonctions Cloudflare
+npm run typecheck   # vérification TypeScript
+npm run deploy      # build puis publication sur Cloudflare Pages
 ```
 
 ---
@@ -81,6 +83,31 @@ Pour recevoir les messages directement, ouvrir `src/sections/Contact.tsx` et ren
 
 ---
 
+## Compteur de visiteurs
+
+Le nombre de visiteurs affiché dans le bandeau d'accueil vient du site lui-même, pas d'un service tiers. Une fonction Cloudflare Pages (`functions/api/views.js`) lit et incrémente un compteur stocké dans Cloudflare KV.
+
+Un même navigateur n'est compté qu'une fois toutes les 24 heures, ce qui garde la métrique parlante et le nombre d'écritures très bas.
+
+**Activation, une seule fois :**
+
+1. Cloudflare Dashboard → **Storage & Databases** → **KV** → **Create namespace**, par exemple `ledev255-views`.
+2. Aller sur le projet Pages → **Settings** → **Bindings** → **Add** → **KV namespace**.
+3. Nom de la variable : `VIEWS`. Namespace : celui créé à l'étape 1. Enregistrer.
+4. Redéployer.
+
+Tant que ce binding n'existe pas, la route répond 503 et la tuile « Visiteurs » disparaît simplement du bandeau. Rien d'autre n'est affecté.
+
+**Tester en local**, avec un KV simulé sur la machine :
+
+```bash
+npm run preview:cf      # http://localhost:8788
+```
+
+Le serveur de développement habituel (`npm run dev`) ne sert pas les fonctions : le compteur n'y apparaît pas, c'est normal.
+
+---
+
 ## Déploiement sur Cloudflare Pages
 
 ### Via l'interface web
@@ -101,8 +128,7 @@ Pour recevoir les messages directement, ouvrir `src/sections/Contact.tsx` et ren
 ### Via la ligne de commande
 
 ```bash
-npm run build
-npx wrangler pages deploy dist --project-name=ledev255-portfolio
+npm run deploy
 ```
 
 Le dossier `public/` contient déjà `_headers` (cache et en-têtes de sécurité) et `_redirects` (repli SPA). Cloudflare les applique automatiquement.

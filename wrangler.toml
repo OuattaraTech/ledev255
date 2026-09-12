@@ -1,0 +1,12 @@
+name = "ledev255-portfolio"
+compatibility_date = "2024-11-06"
+pages_build_output_dir = "dist"
+
+# Le compteur de visiteurs a besoin d'un namespace KV lié sous le nom VIEWS.
+# En production, le plus simple est de le déclarer dans le tableau de bord
+# Cloudflare : Workers & Pages → le projet → Settings → Bindings → KV.
+# Pour le déclarer ici à la place, décommente et renseigne l'identifiant :
+#
+# [[kv_namespaces]]
+# binding = "VIEWS"
+# id = "<identifiant du namespace>"

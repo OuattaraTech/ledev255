@@ -4,6 +4,7 @@ import HeroScene from '../components/three/HeroScene'
 import { Counter, Magnetic, Marquee } from '../components/primitives'
 import { identity, socials, stats } from '../data/content'
 import { useReducedMotion } from '../hooks/useMediaQuery'
+import { useVisitorCount } from '../hooks/useVisitorCount'
 
 function RotatingRole() {
   const [i, setI] = useState(0)
@@ -38,6 +39,7 @@ function RotatingRole() {
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null)
+  const visitors = useVisitorCount()
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '22%'])
   const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0])
@@ -196,7 +198,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.15 }}
-          className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl glass sm:mt-16 lg:grid-cols-4"
+          className={`mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl glass sm:mt-16 ${
+            visitors === null ? 'lg:grid-cols-4' : 'lg:grid-cols-5'
+          }`}
         >
           {stats.map((s) => (
             <div key={s.label} className="px-4 py-5 text-center sm:py-6">
@@ -208,6 +212,29 @@ export default function Hero() {
               </div>
             </div>
           ))}
+
+          {/* Compteur en direct : affiché seulement si le serveur répond */}
+          {visitors !== null && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="col-span-2 px-4 py-5 text-center sm:py-6 lg:col-span-1"
+            >
+              <div className="font-display text-2xl font-bold text-gradient sm:text-3xl lg:text-4xl">
+                <Counter to={visitors} duration={2.2} />
+              </div>
+              <div className="mt-1 flex items-center justify-center gap-1.5">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-400/70" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-gold-400" />
+                </span>
+                <span className="font-mono text-[9px] uppercase tracking-wider text-muted sm:text-[10px]">
+                  Visiteurs
+                </span>
+              </div>
+            </motion.div>
+          )}
         </motion.div>
       </motion.div>
 
