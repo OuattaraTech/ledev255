@@ -76,7 +76,7 @@ export default function Footer() {
             © {year} {identity.firstName} {identity.lastName}
           </p>
           <p className="font-mono text-[10px] uppercase tracking-wider text-muted">
-            Conçu & codé à Abidjan · React · Three.js
+            React · Three.js
           </p>
         </div>
       </div>
