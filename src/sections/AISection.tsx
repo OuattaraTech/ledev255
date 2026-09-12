@@ -77,7 +77,7 @@ export default function AISection() {
                 <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
               </span>
               <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
-                gains-mesures.log
+                mon-workflow.log
               </span>
             </div>
 

@@ -34,7 +34,7 @@ function TimelineItem({
               gold ? 'text-gold-400' : 'text-violet-300'
             }`}
           >
-            {item.year}
+            {item.phase}
           </span>
           <span className="h-1 w-1 rounded-full bg-muted/60" />
           <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
@@ -68,8 +68,8 @@ export default function About() {
       <div className="container-x relative">
         <SectionHeading
           eyebrow="Le parcours"
-          title="De l’agro-économie"
-          accent="au code"
+          title="L’agronome qui s’est laissé"
+          accent="guider par le code"
           description={identity.intro}
         />
 
@@ -97,7 +97,7 @@ export default function About() {
 
             <div className="flex flex-col gap-6 sm:gap-8">
               {journey.map((j, i) => (
-                <TimelineItem key={j.year} item={j} index={i} />
+                <TimelineItem key={j.phase} item={j} index={i} />
               ))}
             </div>
           </div>

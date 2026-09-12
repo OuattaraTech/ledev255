@@ -13,14 +13,14 @@ export const identity = {
   alias: 'LE DEV255',
   roles: [
     'Développeur Fullstack',
-    'Ingénieur Agro-Économiste',
+    'Élève Ingénieur Agro-Économiste',
     'Entrepreneur Digital',
     'AI-Augmented Builder',
   ],
   tagline:
     "Je transforme des idées en produits web rapides, propres et augmentés à l'IA.",
   intro:
-    "Ingénieur agro-économiste diplômé de l'INP-HB devenu développeur fullstack autodidacte. Je conçois et j'expédie des produits numériques de bout en bout — de la modélisation économique à l'interface finale.",
+    "Élève ingénieur agro-économiste à l'INP-HB, développeur fullstack autodidacte. Je conçois et j'expédie des produits numériques de bout en bout — de la modélisation économique à l'interface finale.",
   location: 'Abidjan, Côte d’Ivoire',
   availability: 'Disponible pour missions & collaborations',
   photo: '/imgs/photo_profil.jpeg', // original, utilisé pour l'aperçu réseaux sociaux
@@ -49,47 +49,46 @@ export const contact = {
   whatsapp: 'https://wa.me/message/7YUNZIZGUYNNE1',
 }
 
-/* ⚠️ À AJUSTER — seuls le nombre de projets et « autodidacte » sont vérifiés */
 export const stats = [
-  { value: 5, suffix: '+', label: "Années à coder" },
+  { value: 4, suffix: '', label: 'Années à coder' },
   { value: 6, suffix: '', label: 'Projets construits' },
-  { value: 12, suffix: '', label: 'Outils IA maîtrisés' },
+  { value: 2, suffix: '', label: 'Projets en cours' },
   { value: 100, suffix: '%', label: 'Autodidacte' },
 ]
 
-/* ─────────────────────────── PARCOURS ─────────────────────────── */
+/* ─────────────────────────── PARCOURS ───────────────────────────
+   Volontairement sans dates : ce sont des étapes, pas un calendrier. */
 export const journey = [
   {
-    year: '2016 — 2021',
-    title: 'INP-HB — Ingénieur Agro-Économiste',
+    phase: 'Le socle',
+    title: 'Cycle ingénieur agro-économiste, INP-HB',
     place: 'Institut National Polytechnique Félix Houphouët-Boigny',
-    text: "Formation d'ingénieur : économétrie, modélisation des filières agricoles, statistiques appliquées, gestion de projet. C'est là que j'ai appris à raisonner en systèmes — une compétence que j'utilise chaque jour en architecture logicielle.",
+    text: "Économétrie, modélisation des filières agricoles, statistiques appliquées, conduite de projet. Une formation qui apprend à comprendre un système entier avant d'en toucher la moindre pièce. C'est exactement ce que réclame l'architecture logicielle. Cycle en cours d'achèvement.",
     accent: 'gold' as const,
   },
   {
-    year: '2020 — 2022',
-    title: 'Bascule vers le code — 100% autodidacte',
-    place: 'Web · JavaScript · Python',
-    text: "Des tableaux de données agricoles aux premières lignes de JavaScript. J'automatise mes propres analyses, puis je construis mes premiers outils web. La curiosité devient un métier.",
+    phase: 'Le déclic',
+    title: 'Les premières lignes, juste après le bac',
+    place: 'Autodidacte · Web & Python',
+    text: "La curiosité prend le dessus dès la sortie du lycée. J'automatise d'abord mes propres analyses, puis je construis mes premiers outils web. Personne ne m'a enseigné le code : la documentation, les erreurs et l'obstination ont suffi.",
     accent: 'violet' as const,
   },
   {
-    year: '2022 — 2024',
-    title: 'Développeur Fullstack',
-    place: 'React · Node.js · PostgreSQL · Cloud',
-    text: "Conception et livraison d'applications complètes : interfaces réactives, APIs robustes, bases de données pensées pour durer, déploiement continu.",
+    phase: 'La construction',
+    title: 'Développeur fullstack',
+    place: 'Flutter · Node.js · Python · PostgreSQL',
+    text: "Des applications complètes, livrées de bout en bout : interfaces mobiles qui tiennent hors-ligne, APIs robustes, bases de données pensées pour durer, mise en production. Chaque projet a été l'occasion d'apprendre une brique de plus.",
     accent: 'violet' as const,
   },
   {
-    year: '2024 — Aujourd’hui',
-    title: 'Entrepreneur Digital & AI-Augmented Builder',
+    phase: 'Aujourd’hui',
+    title: 'Entrepreneur digital & AI-Augmented Builder',
     place: 'Produits · Automatisation · IA',
-    text: "Je construis mes propres produits et j'accompagne d'autres porteurs de projets. L'IA n'est pas un gadget dans mon workflow : c'est un multiplicateur de vitesse d'exécution.",
+    text: "Je construis mes propres produits et j'accompagne d'autres porteurs de projets. Le terrain agricole et la conformité ivoirienne ne sont pas des contraintes que je subis : ce sont les deux endroits où ma formation et mon code se rejoignent. L'IA, elle, n'est pas un gadget dans mon workflow — c'est un multiplicateur de vitesse d'exécution.",
     accent: 'gold' as const,
   },
 ]
 
-/* ─────────────────────────── COMPÉTENCES ─────────────────────────── */
 export type SkillGroup = {
   key: string
   title: string
@@ -188,6 +187,7 @@ export const aiPillars = [
   },
 ]
 
+/* ⚠️ Ordres de grandeur illustratifs, pas des mesures. */
 export const aiMetrics = [
   { label: "Temps de prototypage", before: '2 semaines', after: '2 jours' },
   { label: 'Rédaction technique', before: '6 h', after: '45 min' },
