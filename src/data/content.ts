@@ -21,7 +21,9 @@ export const identity = {
     "Je transforme des idées en produits web rapides, propres et augmentés à l'IA.",
   intro:
     "Élève ingénieur agro-économiste à l'INP-HB, développeur fullstack autodidacte. Je conçois et j'expédie des produits numériques de bout en bout — de la modélisation économique à l'interface finale.",
-  location: 'Abidjan, Côte d’Ivoire',
+  location: 'Yamoussoukro & Bouaké, Côte d’Ivoire',
+  locationDetail:
+    'Je travaille en distanciel avec des clients partout, et en présentiel sur Yamoussoukro et Bouaké.',
   availability: 'Disponible pour missions & collaborations',
   photo: '/imgs/photo_profil.jpeg', // original, utilisé pour l'aperçu réseaux sociaux
   photoCut: '/imgs/photo_profil_cut.webp', // détourée, affichée sur le site

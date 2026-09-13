@@ -259,7 +259,7 @@ export default function Contact() {
                   </span>
                 </div>
                 <p className="mt-4 text-[13px] leading-relaxed text-muted">
-                  Je travaille en distanciel avec des clients partout, et en présentiel sur Abidjan.
+                  {identity.locationDetail}
                 </p>
               </div>
             </div>
