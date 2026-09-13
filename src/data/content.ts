@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   CONTENU DU PORTFOLIO — LE DEV255
+   CONTENU DU PORTFOLIO — DEV225
    ───────────────────────────────────────────────────────────────────────
    👉 C'EST LE SEUL FICHIER À MODIFIER pour changer les textes du site.
    Les blocs marqués « ⚠️ À REMPLACER » contiennent des exemples
@@ -10,7 +10,11 @@
 export const identity = {
   firstName: 'Ouattara',
   lastName: 'Yaya',
-  alias: 'LE DEV255',
+  alias: 'DEV225',
+  tagline2: 'La référence digital',
+  logo: '/imgs/logo-lockup.webp',
+  logoFull: '/imgs/logo-full.webp',
+  logoMark: '/imgs/logo-mark.webp',
   roles: [
     'Développeur Fullstack',
     'Élève Ingénieur Agro-Économiste',
@@ -49,6 +53,9 @@ export const contact = {
   phone: '+2250779667543',
   phoneDisplay: '+225 07 79 66 75 43',
   whatsapp: 'https://wa.me/message/7YUNZIZGUYNNE1',
+  /** Message pré-rempli du bouton flottant WhatsApp. */
+  whatsappText:
+    'Bonjour Yaya, je vous écris depuis votre portfolio. J’aimerais échanger sur un projet.',
 }
 
 export const stats = [

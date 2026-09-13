@@ -1,4 +1,4 @@
-# Portfolio — Ouattara Yaya · LE DEV255
+# Portfolio — Ouattara Yaya · DEV225
 
 Portfolio personnel animé, construit en React + Three.js, pensé mobile-first et déployé sur Cloudflare Pages.
 
@@ -164,4 +164,4 @@ src/
 
 ---
 
-© Ouattara Yaya — LE DEV255
+© Ouattara Yaya — DEV225

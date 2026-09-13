@@ -3,6 +3,7 @@ import Cursor from './components/Cursor'
 import Nav from './components/Nav'
 import Preloader from './components/Preloader'
 import SmoothScroll from './components/SmoothScroll'
+import WhatsAppFab from './components/WhatsAppFab'
 import { ScrollProgress } from './components/primitives'
 import About from './sections/About'
 import AISection from './sections/AISection'
@@ -42,6 +43,7 @@ export default function App() {
       </main>
 
       <Footer />
+      <WhatsAppFab />
     </>
   )
 }

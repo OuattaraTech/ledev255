@@ -53,14 +53,14 @@ export default function Nav() {
             }`}
           >
             {/* Logo */}
-            <a href="#accueil" className="group flex items-center gap-2.5" aria-label="Retour en haut">
-              <span className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-gold-300 via-gold-400 to-violet-600 text-void">
-                <span className="font-display text-[13px] font-bold">Y</span>
-                <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/25" />
-              </span>
-              <span className="font-display text-[13px] font-semibold tracking-wide2 text-chalk sm:text-sm">
-                LE<span className="text-gold-400">DEV</span>255
-              </span>
+            <a href="#accueil" className="group flex items-center" aria-label={`${identity.alias}, retour en haut`}>
+              <img
+                src={identity.logo}
+                alt={identity.alias}
+                width={640}
+                height={429}
+                className="h-9 w-auto transition-transform duration-300 group-hover:scale-[1.05] sm:h-10"
+              />
             </a>
 
             {/* Liens desktop */}

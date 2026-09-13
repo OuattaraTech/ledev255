@@ -10,13 +10,14 @@ export default function Footer() {
       <div className="container-x relative">
         <div className="grid gap-10 pb-12 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2">
-            <a href="#accueil" className="inline-flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-gold-300 via-gold-400 to-violet-600 font-display text-sm font-bold text-void">
-                Y
-              </span>
-              <span className="font-display text-lg font-semibold tracking-wide2">
-                LE<span className="text-gold-400">DEV</span>255
-              </span>
+            <a href="#accueil" className="inline-block" aria-label={`${identity.alias}, retour en haut`}>
+              <img
+                src={identity.logoFull}
+                alt={`${identity.alias} — ${identity.tagline2}`}
+                width={640}
+                height={429}
+                className="h-16 w-auto sm:h-20"
+              />
             </a>
             <p className="mt-4 max-w-sm text-[14px] leading-relaxed text-muted">
               {identity.tagline}
@@ -67,7 +68,7 @@ export default function Footer() {
         {/* Grand nom en filigrane */}
         <div className="relative select-none overflow-hidden" aria-hidden>
           <p className="whitespace-nowrap text-center font-display text-[clamp(3rem,15vw,13rem)] font-bold leading-[0.8] tracking-tighter text-white/[0.035]">
-            LE DEV 255
+            DEV 225
           </p>
         </div>
 

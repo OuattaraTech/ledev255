@@ -99,8 +99,14 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
                   </linearGradient>
                 </defs>
               </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-mono text-lg font-medium text-gold-300 sm:text-xl">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+                <img
+                  src={identity.logoMark}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-8 w-auto sm:h-9"
+                />
+                <span className="font-mono text-[11px] font-medium text-gold-300 sm:text-xs">
                   {Math.round(progress)}
                 </span>
               </div>
