@@ -294,13 +294,12 @@ export const projects: Project[] = [
   },
 ]
 
-/* ─────────────────────────── PROJETS EN COURS ───────────────────────────
-   ⚠️ Les pourcentages d'avancement et les échéances sont à ajuster. */
+/* ─────────────────────────── PROJETS EN COURS ─────────────────────────── */
 export const ongoing = [
   {
     title: 'AgroLink',
     status: 'En développement',
-    progress: 55,
+    progress: 40,
     eta: '',
     text: "Super-app agricole tout-en-un pour les producteurs ivoiriens : diagnostic des maladies des cultures par IA depuis une photo, prix du marché en direct, mise en relation producteur-acheteur et alertes météo.",
     stack: ['Flutter', 'Supabase', 'TensorFlow Lite'],
@@ -308,7 +307,7 @@ export const ongoing = [
   {
     title: 'KernSys',
     status: 'En développement',
-    progress: 45,
+    progress: 30,
     eta: '',
     text: "ERP agricole qui digitalise toute la chaîne d'une coopérative d'anacarde, de l'achat au producteur jusqu'à l'exportation. Une application mobile pour les pisteurs — collecte hors-ligne, pesée, paiement — et une application web pour la coopérative : stocks, qualité, trésorerie, comptabilité OHADA, ventes et rapports. Un outil clé en main qui remplace Excel et le papier, sécurise les flux financiers et garantit la traçabilité.",
     stack: ['HTML', 'CSS', 'JavaScript', 'Node.js', 'Python', 'PostgreSQL', 'ReportLab'],
