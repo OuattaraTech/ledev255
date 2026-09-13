@@ -114,12 +114,12 @@ export default function Hero() {
                 {identity.firstName}
               </motion.span>
               <motion.span
-                className="block text-[clamp(2.4rem,11vw,5.5rem)] text-gradient"
+                className="block text-[clamp(2.4rem,11vw,5.5rem)]"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
               >
-                {identity.lastName}
+                <span className="text-gradient">{identity.lastName}</span>
               </motion.span>
             </h1>
 

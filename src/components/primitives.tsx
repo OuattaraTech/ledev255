@@ -124,6 +124,40 @@ export function SplitText({
   )
 }
 
+/* ───────────────────────── Mot en dégradé ─────────────────────────
+   Safari casse `background-clip: text` dès qu'un descendant porte une
+   transformation : les lettres deviennent invisibles. On anime donc le
+   bloc entier, et l'élément qui porte le dégradé n'a ni transformation
+   propre ni descendant transformé. */
+
+export function GradientWord({
+  text,
+  delay = 0,
+  className = '',
+}: {
+  text: string
+  delay?: number
+  className?: string
+}) {
+  const reduced = useReducedMotion()
+
+  if (reduced) {
+    return <span className={`text-gradient ${className}`}>{text}</span>
+  }
+
+  return (
+    <motion.span
+      className="inline-block"
+      initial={{ opacity: 0, y: '0.32em' }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.4 }}
+      transition={{ duration: 0.85, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <span className={`text-gradient ${className}`}>{text}</span>
+    </motion.span>
+  )
+}
+
 /* ───────────────────────── Titre de section ───────────────────────── */
 
 export function SectionHeading({
@@ -159,9 +193,7 @@ export function SectionHeading({
         {accent && (
           <>
             {' '}
-            <span className="text-gradient">
-              <SplitText text={accent} delay={0.12} />
-            </span>
+            <GradientWord text={accent} delay={0.28} />
           </>
         )}
       </h2>

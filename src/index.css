@@ -101,11 +101,15 @@
     border: 1px solid rgba(160, 150, 255, 0.16);
   }
 
+  /* Safari a besoin de -webkit-text-fill-color en plus de color.
+     Et il cesse de peindre le texte si un descendant est transformé :
+     ne jamais animer les lettres à l'intérieur de ces classes. */
   .text-gradient {
     background: linear-gradient(120deg, #ffe6ad 0%, #f5c451 20%, #ffffff 45%, #b9a5ff 72%, #7d55ff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    -webkit-text-fill-color: transparent;
   }
 
   .text-gradient-v {
@@ -113,6 +117,18 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Filet de sécurité : si le découpage du dégradé sur le texte n'est pas
+     disponible, on retombe sur une couleur pleine plutôt qu'invisible. */
+  @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+    .text-gradient,
+    .text-gradient-v {
+      background: none;
+      color: #f5c451;
+      -webkit-text-fill-color: #f5c451;
+    }
   }
 
   .eyebrow {
