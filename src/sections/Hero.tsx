@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import HeroScene from '../components/three/HeroScene'
 import { Counter, Magnetic, Marquee } from '../components/primitives'
 import { identity, socials, stats } from '../data/content'
-import { useReducedMotion } from '../hooks/useMediaQuery'
+import { useReducedMotion } from '../hooks/useMotionPreference'
 import { useVisitorCount } from '../hooks/useVisitorCount'
 
 function RotatingRole() {

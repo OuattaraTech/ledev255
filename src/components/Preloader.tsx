@@ -1,10 +1,26 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { identity } from '../data/content'
+import { useReducedMotion } from '../hooks/useMotionPreference'
 
 export default function Preloader({ onDone }: { onDone: () => void }) {
   const [progress, setProgress] = useState(0)
   const [visible, setVisible] = useState(true)
+  /* Retrait garanti par minuterie : l'animation de sortie est pilotée par
+     requestAnimationFrame, qui peut ne jamais s'exécuter si l'onglet est en
+     arrière-plan. Sans ce garde-fou, le voile resterait affiché. */
+  const [gone, setGone] = useState(false)
+  const reduced = useReducedMotion()
+
+  useEffect(() => {
+    if (visible) return
+    const t = setTimeout(() => setGone(true), reduced ? 0 : 1200)
+    return () => clearTimeout(t)
+  }, [visible, reduced])
+
+  useEffect(() => {
+    if (gone) onDone()
+  }, [gone, onDone])
 
   useEffect(() => {
     const started = performance.now()
@@ -52,8 +68,10 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
     }
   }, [])
 
+  if (gone) return null
+
   return (
-    <AnimatePresence onExitComplete={onDone}>
+    <AnimatePresence onExitComplete={() => setGone(true)}>
       {visible && (
         <motion.div
           key="preloader"
@@ -130,7 +148,7 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              Initialisation de l’espace 3D…
+              {reduced ? 'Chargement…' : 'Initialisation de l’espace 3D…'}
             </motion.p>
           </div>
         </motion.div>

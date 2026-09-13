@@ -5,6 +5,7 @@ import Preloader from './components/Preloader'
 import SmoothScroll from './components/SmoothScroll'
 import WhatsAppFab from './components/WhatsAppFab'
 import { ScrollProgress } from './components/primitives'
+import { MotionProvider } from './hooks/useMotionPreference'
 import About from './sections/About'
 import AISection from './sections/AISection'
 import Contact from './sections/Contact'
@@ -18,7 +19,7 @@ export default function App() {
   const [, setReady] = useState(false)
 
   return (
-    <>
+    <MotionProvider>
       <Preloader onDone={() => setReady(true)} />
       <SmoothScroll />
       <Cursor />
@@ -44,6 +45,6 @@ export default function App() {
 
       <Footer />
       <WhatsAppFab />
-    </>
+    </MotionProvider>
   )
 }

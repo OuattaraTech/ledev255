@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { useHasHover, useReducedMotion } from '../hooks/useMediaQuery'
+import { useHasHover } from '../hooks/useMediaQuery'
+import { useReducedMotion } from '../hooks/useMotionPreference'
 
 /** Curseur personnalisé — desktop uniquement, jamais sur tactile. */
 export default function Cursor() {

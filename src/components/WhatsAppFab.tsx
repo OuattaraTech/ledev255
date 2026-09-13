@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { contact } from '../data/content'
 import { WhatsAppIcon } from './icons'
-import { useReducedMotion } from '../hooks/useMediaQuery'
+import { useReducedMotion } from '../hooks/useMotionPreference'
 
 /** Numéro au format attendu par wa.me : chiffres uniquement. */
 const digits = contact.phone.replace(/\D/g, '')

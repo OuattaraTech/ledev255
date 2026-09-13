@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import MotionToggle from './MotionToggle'
 import { identity, navLinks, socials } from '../data/content'
 
 export default function Nav() {
@@ -93,6 +94,8 @@ export default function Nav() {
               >
                 Travaillons ensemble
               </a>
+
+              <MotionToggle />
 
               {/* Burger */}
               <button

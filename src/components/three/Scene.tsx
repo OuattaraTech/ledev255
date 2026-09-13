@@ -4,7 +4,7 @@ import { PerformanceMonitor } from '@react-three/drei'
 import { deviceTier, maxDpr, webglAvailable, type Tier } from '../../lib/perf'
 import { useInView } from '../../hooks/useInView'
 import ErrorBoundary from '../ErrorBoundary'
-import { useReducedMotion } from '../../hooks/useMediaQuery'
+import { useReducedMotion } from '../../hooks/useMotionPreference'
 
 type Props = {
   children: (tier: Tier) => ReactNode

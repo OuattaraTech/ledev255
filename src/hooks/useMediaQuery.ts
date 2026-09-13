@@ -18,6 +18,8 @@ export function useMediaQuery(query: string, initial = false) {
 
 export const useIsMobile = () => useMediaQuery('(max-width: 767px)', true)
 export const useIsTablet = () => useMediaQuery('(max-width: 1023px)', true)
-export const useReducedMotion = () =>
+/** Réglage du système uniquement. Passer par useReducedMotion pour la
+ *  préférence effective, qui tient compte du choix de l'utilisateur. */
+export const useSystemReducedMotion = () =>
   useMediaQuery('(prefers-reduced-motion: reduce)', false)
 export const useHasHover = () => useMediaQuery('(hover: hover) and (pointer: fine)', false)

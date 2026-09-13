@@ -143,7 +143,7 @@ Le site adapte sa charge graphique à l'appareil :
 - **Scènes montées à la demande** — chaque canvas WebGL n'existe que lorsque sa section approche de l'écran, via `IntersectionObserver`.
 - **Dégradation automatique** — `PerformanceMonitor` réduit la résolution de rendu si le taux d'images chute.
 - **Repli sans WebGL** — si le navigateur ne peut pas rendre de 3D, la photo et les dégradés CSS prennent le relais. Une erreur dans une scène n'affecte jamais le reste de la page.
-- **`prefers-reduced-motion`** — toutes les scènes 3D et les animations sont désactivées si le système du visiteur le demande.
+- **Interrupteur d'animations** — un bouton dans la barre de navigation coupe les scènes 3D, le défilement fluide, les apparitions au scroll et les animations CSS. Le choix est mémorisé dans le navigateur. Par défaut il suit `prefers-reduced-motion`, le réglage du système.
 - Navigation au clavier, lien d'évitement, focus visible, contrastes tenus sur fond sombre.
 
 ---

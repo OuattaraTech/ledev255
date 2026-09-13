@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import Lenis from 'lenis'
-import { useReducedMotion } from '../hooks/useMediaQuery'
+import { useReducedMotion } from '../hooks/useMotionPreference'
 
 export default function SmoothScroll() {
   const reduced = useReducedMotion()
