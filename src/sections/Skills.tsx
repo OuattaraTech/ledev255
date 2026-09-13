@@ -23,7 +23,7 @@ export default function Skills() {
 
         <div className="mt-14 grid items-center gap-10 lg:mt-20 lg:grid-cols-2 lg:gap-14">
           {/* Globe 3D */}
-          <Reveal direction="right" className="order-2 lg:order-1">
+          <Reveal direction="right" className="order-2 min-w-0 lg:order-1">
             <div className="relative mx-auto aspect-square w-full max-w-[580px]">
               <div className="absolute inset-[22%] rounded-full bg-[radial-gradient(circle,rgba(125,85,255,0.2),transparent_66%)] blur-2xl" />
               <SkillsGlobe className="absolute inset-0" />
@@ -34,7 +34,7 @@ export default function Skills() {
           </Reveal>
 
           {/* Onglets + barres */}
-          <div className="order-1 lg:order-2">
+          <div className="order-1 min-w-0 lg:order-2">
             <Reveal direction="left">
               <div
                 className="mask-fade-x -mx-5 flex gap-2 overflow-x-auto px-5 pb-2 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"

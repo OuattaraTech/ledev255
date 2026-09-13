@@ -235,11 +235,11 @@ export default function Projects() {
 
                   <div>
                     <div className="flex items-center gap-3">
-                      <span className="font-mono text-[11px] text-gold-400">
+                      <span className="shrink-0 font-mono text-[11px] text-gold-400">
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <span className="h-px flex-1 bg-gradient-to-r from-gold-400/40 to-transparent" />
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
+                      <span className="h-px min-w-[1rem] flex-1 bg-gradient-to-r from-gold-400/40 to-transparent" />
+                      <span className="min-w-0 text-right font-mono text-[10px] uppercase leading-snug tracking-wide text-muted">
                         {p.category}
                       </span>
                     </div>
@@ -312,12 +312,12 @@ export default function Projects() {
                       className="grad-border flex h-full w-full flex-col rounded-2xl glass p-5 text-left transition-colors duration-500"
                       data-cursor="grow"
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-violet-300/80">
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="min-w-0 font-mono text-[10px] uppercase leading-snug tracking-wide text-violet-300/80">
                           {p.category}
                         </span>
                         {p.year && (
-                          <span className="font-mono text-[10px] text-muted">{p.year}</span>
+                          <span className="shrink-0 font-mono text-[10px] text-muted">{p.year}</span>
                         )}
                       </div>
                       <h4 className="mt-3 font-display text-lg font-semibold text-chalk">
