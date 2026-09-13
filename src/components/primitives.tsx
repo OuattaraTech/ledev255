@@ -8,6 +8,7 @@ import {
   type Variants,
 } from 'framer-motion'
 import {
+  Fragment,
   useEffect,
   useRef,
   useState,
@@ -106,14 +107,18 @@ export function SplitText({
       style={{ perspective: 600 }}
     >
       {words.map((w, wi) => (
-        <span key={wi} className="inline-block whitespace-nowrap">
-          {Array.from(w).map((ch, ci) => (
-            <motion.span key={ci} variants={child} className="inline-block will-change-transform">
-              {ch}
-            </motion.span>
-          ))}
-          {wi < words.length - 1 && <span className="inline-block">&nbsp;</span>}
-        </span>
+        <Fragment key={wi}>
+          <span className="inline-block whitespace-nowrap">
+            {Array.from(w).map((ch, ci) => (
+              <motion.span key={ci} variants={child} className="inline-block will-change-transform">
+                {ch}
+              </motion.span>
+            ))}
+          </span>
+          {/* Espace réel entre les mots : sans lui, le titre forme un bloc
+              insécable qui déborde du cadre sur un écran étroit. */}
+          {wi < words.length - 1 && ' '}
+        </Fragment>
       ))}
     </motion.span>
   )
@@ -148,7 +153,7 @@ export function SectionHeading({
       </Reveal>
       <h2
         id={id}
-        className="mt-4 font-display text-[clamp(1.9rem,7vw,3.6rem)] font-bold leading-[1.05] tracking-tight"
+        className="mt-4 [overflow-wrap:break-word] font-display text-[clamp(1.7rem,6.6vw,3.6rem)] font-bold leading-[1.06] tracking-tight"
       >
         <SplitText text={title} />
         {accent && (

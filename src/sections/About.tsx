@@ -111,7 +111,7 @@ export default function About() {
 
                   <span className="eyebrow">Ce que je fais</span>
                   <h3 className="mt-3 font-display text-xl font-semibold text-chalk sm:text-2xl">
-                    Trois façons de <span className="text-gradient">travailler ensemble</span>
+                    Quatre façons de <span className="text-gradient">travailler ensemble</span>
                   </h3>
 
                   <ul className="mt-6 space-y-5">

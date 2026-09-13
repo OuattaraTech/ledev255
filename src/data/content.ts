@@ -317,6 +317,10 @@ export const ongoing = [
 
 export const services = [
   {
+    title: 'Applications mobiles',
+    text: "Android et iOS avec Flutter : interfaces fluides, fonctionnement hors-ligne pour le terrain, publication sur les stores.",
+  },
+  {
     title: 'Applications web sur mesure',
     text: 'De la maquette au déploiement : interfaces modernes, backends solides, mise en production.',
   },
