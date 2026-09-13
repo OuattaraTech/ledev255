@@ -65,9 +65,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Planète annelée : occupe la colonne libre sur grand écran */}
-          <div className="hidden lg:flex lg:items-start lg:justify-end">
-            <div className="relative aspect-square w-full max-w-[260px]">
+          {/* Planète annelée : colonne libre sur grand écran, bloc centré ailleurs */}
+          <div className="flex justify-center sm:col-span-2 lg:col-span-1 lg:items-start lg:justify-end">
+            <div className="relative aspect-square w-full max-w-[220px] sm:max-w-[240px] lg:max-w-[260px]">
               <div className="pointer-events-none absolute inset-[18%] rounded-full bg-[radial-gradient(circle,rgba(125,85,255,0.22),transparent_66%)] blur-2xl" />
               <OrbitPlanet className="absolute inset-0" />
             </div>
