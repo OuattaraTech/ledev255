@@ -1,3 +1,4 @@
+import OrbitPlanet from '../components/three/OrbitPlanet'
 import { identity, navLinks, socials } from '../data/content'
 
 export default function Footer() {
@@ -8,8 +9,8 @@ export default function Footer() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-[radial-gradient(ellipse_at_50%_120%,rgba(125,85,255,0.22),transparent_65%)]" />
 
       <div className="container-x relative">
-        <div className="grid gap-10 pb-12 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="sm:col-span-2">
+        <div className="grid gap-10 pb-12 sm:grid-cols-2 lg:grid-cols-[1.35fr_0.75fr_0.75fr_1fr] lg:gap-8">
+          <div className="sm:col-span-2 lg:col-span-1">
             <a href="#accueil" className="inline-block" aria-label={`${identity.alias}, retour en haut`}>
               <img
                 src={identity.logoFull}
@@ -62,6 +63,14 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
+          </div>
+
+          {/* Planète annelée : occupe la colonne libre sur grand écran */}
+          <div className="hidden lg:flex lg:items-start lg:justify-end">
+            <div className="relative aspect-square w-full max-w-[260px]">
+              <div className="pointer-events-none absolute inset-[18%] rounded-full bg-[radial-gradient(circle,rgba(125,85,255,0.22),transparent_66%)] blur-2xl" />
+              <OrbitPlanet className="absolute inset-0" />
+            </div>
           </div>
         </div>
 
