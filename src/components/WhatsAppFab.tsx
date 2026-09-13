@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { contact } from '../data/content'
+import { WhatsAppIcon } from './icons'
 import { useReducedMotion } from '../hooks/useMediaQuery'
 
 /** Numéro au format attendu par wa.me : chiffres uniquement. */
@@ -49,13 +50,7 @@ export default function WhatsAppFab() {
               <span className="pointer-events-none absolute inset-0 animate-pulse-ring rounded-full bg-[#25D366]/50" />
             )}
 
-            <svg
-              viewBox="0 0 32 32"
-              aria-hidden="true"
-              className="relative h-7 w-7 fill-white sm:h-8 sm:w-8"
-            >
-              <path d="M16.04 3.2c-7.08 0-12.83 5.75-12.83 12.83 0 2.26.6 4.47 1.73 6.42L3.2 28.8l6.52-1.7a12.78 12.78 0 0 0 6.32 1.65h.01c7.07 0 12.82-5.75 12.83-12.83 0-3.43-1.33-6.65-3.76-9.07a12.74 12.74 0 0 0-9.08-3.65Zm0 23.16h-.01a10.65 10.65 0 0 1-5.43-1.49l-.39-.23-4.03 1.05 1.08-3.93-.25-.4a10.62 10.62 0 0 1-1.63-5.68c0-5.88 4.79-10.66 10.67-10.66 2.85 0 5.52 1.11 7.53 3.13a10.58 10.58 0 0 1 3.12 7.54c-.01 5.88-4.79 10.67-10.66 10.67Zm5.85-7.99c-.32-.16-1.9-.94-2.19-1.04-.29-.11-.5-.16-.71.16-.21.32-.82 1.04-1 1.25-.19.21-.37.24-.69.08-.32-.16-1.35-.5-2.58-1.59-.95-.85-1.6-1.9-1.79-2.22-.18-.32-.02-.49.14-.65.15-.14.32-.37.48-.56.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.71-1.72-.98-2.35-.26-.62-.52-.54-.71-.55l-.61-.01c-.21 0-.56.08-.85.4-.29.32-1.11 1.09-1.11 2.65s1.14 3.08 1.3 3.29c.16.21 2.24 3.42 5.43 4.8.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.9-.78 2.16-1.53.27-.75.27-1.39.19-1.53-.08-.13-.29-.21-.61-.37Z" />
-            </svg>
+            <WhatsAppIcon className="relative h-7 w-7 fill-white sm:h-8 sm:w-8" />
 
             {/* libellé au survol, desktop uniquement */}
             <span

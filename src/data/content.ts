@@ -203,6 +203,39 @@ export const aiMetrics = [
   { label: 'Reporting mensuel', before: 'Manuel', after: 'Automatisé' },
 ]
 
+/* ─────────────────────────── CHAÎNE WHATSAPP ─────────────────────────── */
+export const channel = {
+  name: 'Deep Vision AI',
+  platform: 'Chaîne WhatsApp',
+  url: 'https://whatsapp.com/channel/0029VbDL8Xi0lwglQQchiw1A',
+  pitch:
+    "Ce que l'IA change dans mon travail, je ne le garde pas pour moi. Sur Deep Vision AI, je partage les outils qui tiennent vraiment la route, les automatisations qui font gagner des heures, et les erreurs qui en font perdre. Du concret, applicable dès le lendemain.",
+  bullets: [
+    'Les outils que j’utilise réellement, testés sur de vrais projets',
+    'Des automatisations prêtes à reproduire, pas des démos de salon',
+    'Ce qui ne marche pas — pour vous éviter d’y passer vos soirées',
+  ],
+  cta: 'Rejoindre la chaîne',
+  note: 'Gratuit. Aucune inscription. Vous partez quand vous voulez.',
+  /* Captures de la chaîne. Pour en ajouter : déposer le fichier dans
+     public/imgs/chaine/ puis compléter cette liste. La galerie
+     disparaît si le tableau est vide. */
+  shots: [
+    {
+      src: '/imgs/chaine/chaine-rag.webp',
+      alt: 'Publication comparant le RAG et le fine-tuning pour adapter une IA à une entreprise',
+    },
+    {
+      src: '/imgs/chaine/chaine-n8n.webp',
+      alt: 'Publication présentant n8n et l’automatisation de tâches répétitives',
+    },
+    {
+      src: '/imgs/chaine/chaine-kobo.webp',
+      alt: 'Publication montrant la création d’un formulaire Kobo avec Claude en cinq minutes',
+    },
+  ] as { src: string; alt: string }[],
+}
+
 /* ─────────────────────────── PROJETS ─────────────────────────── */
 export type Project = {
   id: string

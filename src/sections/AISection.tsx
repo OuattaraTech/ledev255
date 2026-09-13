@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion'
 import DataHelix from '../components/three/DataHelix'
 import { Reveal, SectionHeading, TiltCard } from '../components/primitives'
-import { aiMetrics, aiPillars } from '../data/content'
+import { aiMetrics, aiPillars, channel } from '../data/content'
+import { WhatsAppIcon } from '../components/icons'
 
 export default function AISection() {
   return (
@@ -104,6 +105,95 @@ export default function AISection() {
                   </span>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </Reveal>
+
+        {/* ── Chaîne WhatsApp ── */}
+        <Reveal delay={0.1}>
+          <div className="grad-border relative mt-8 overflow-hidden rounded-3xl glass-strong sm:mt-10">
+            {/* lueur verte, discrète */}
+            <div className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(37,211,102,0.18),transparent_68%)] blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-20 right-0 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(125,85,255,0.16),transparent_68%)] blur-2xl" />
+
+            <div className="relative grid gap-8 p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-10 lg:p-10">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2.5">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#25D366]">
+                    <WhatsAppIcon className="h-5 w-5 fill-white" />
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-ultra text-[#25D366]">
+                    {channel.platform}
+                  </span>
+                </div>
+
+                <h3 className="mt-4 font-display text-2xl font-bold leading-tight text-chalk sm:text-3xl lg:text-4xl">
+                  {channel.name}
+                </h3>
+
+                <p className="mt-3 text-[15px] leading-relaxed text-muted sm:text-base">
+                  {channel.pitch}
+                </p>
+
+                <ul className="mt-5 space-y-2.5">
+                  {channel.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2.5 text-[14px] text-chalk/85">
+                      <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#25D366]" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                  <a
+                    href={channel.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    data-cursor="grow"
+                    className="btn inline-flex w-full items-center justify-center gap-2 whitespace-nowrap bg-[#25D366] text-void
+                               shadow-[0_8px_30px_-8px_rgba(37,211,102,0.7)] hover:-translate-y-0.5
+                               hover:shadow-[0_12px_40px_-8px_rgba(37,211,102,0.9)] sm:w-auto"
+                  >
+                    <WhatsAppIcon className="h-[18px] w-[18px] fill-void" />
+                    {channel.cta}
+                  </a>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
+                    {channel.note}
+                  </span>
+                </div>
+              </div>
+
+              {/* Aperçu des publications */}
+              {channel.shots.length > 0 && (
+                <div
+                  className="mask-fade-x -mx-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-2
+                             sm:-mx-8 sm:px-8 lg:mx-0 lg:snap-none lg:justify-end lg:overflow-visible lg:px-0"
+                  style={{ scrollbarWidth: 'none' }}
+                >
+                  {channel.shots.map((shot, i) => (
+                    <figure
+                      key={shot.src}
+                      className={`w-[150px] shrink-0 snap-center overflow-hidden rounded-2xl border border-line
+                                  bg-night shadow-[0_20px_55px_-20px_rgba(0,0,0,0.95)] sm:w-[165px]
+                                  lg:w-[150px] xl:w-[165px] ${
+                                    i === 0
+                                      ? 'lg:rotate-[-4deg]'
+                                      : i === 1
+                                        ? 'lg:z-10 lg:-mx-3 lg:scale-105'
+                                        : 'lg:rotate-[4deg]'
+                                  }`}
+                    >
+                      <img
+                        src={shot.src}
+                        alt={shot.alt}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-[260px] w-full object-cover object-top sm:h-[290px]"
+                      />
+                    </figure>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </Reveal>
