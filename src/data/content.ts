@@ -58,13 +58,6 @@ export const contact = {
     'Bonjour Yaya, je vous écris depuis votre portfolio. J’aimerais échanger sur un projet.',
 }
 
-export const stats = [
-  { value: 4, suffix: '', label: 'Années à coder' },
-  { value: 7, suffix: '', label: 'Projets construits' },
-  { value: 2, suffix: '', label: 'Projets en cours' },
-  { value: 100, suffix: '%', label: 'Autodidacte' },
-]
-
 /* ─────────────────────────── PARCOURS ───────────────────────────
    Volontairement sans dates : ce sont des étapes, pas un calendrier. */
 export const journey = [
@@ -390,6 +383,15 @@ export const ongoing = [
     text: "ERP agricole qui digitalise toute la chaîne d'une coopérative d'anacarde, de l'achat au producteur jusqu'à l'exportation. Une application mobile pour les pisteurs — collecte hors-ligne, pesée, paiement — et une application web pour la coopérative : stocks, qualité, trésorerie, comptabilité OHADA, ventes et rapports. Un outil clé en main qui remplace Excel et le papier, sécurise les flux financiers et garantit la traçabilité.",
     stack: ['HTML', 'CSS', 'JavaScript', 'Node.js', 'Python', 'PostgreSQL', 'ReportLab'],
   },
+]
+
+/* Les deux compteurs de projets se déduisent des listes ci-dessus :
+   ils ne peuvent plus se désynchroniser. */
+export const stats = [
+  { value: 4, suffix: '', label: 'Années à coder' },
+  { value: projects.length, suffix: '', label: 'Projets livrés' },
+  { value: ongoing.length, suffix: '', label: 'Projets en cours' },
+  { value: 100, suffix: '%', label: 'Autodidacte' },
 ]
 
 export const services = [
