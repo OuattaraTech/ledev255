@@ -60,7 +60,7 @@ export const contact = {
 
 export const stats = [
   { value: 4, suffix: '', label: 'Années à coder' },
-  { value: 6, suffix: '', label: 'Projets construits' },
+  { value: 7, suffix: '', label: 'Projets construits' },
   { value: 2, suffix: '', label: 'Projets en cours' },
   { value: 100, suffix: '%', label: 'Autodidacte' },
 ]
@@ -245,6 +245,8 @@ export type Project = {
   year?: string
   /** Sigle affiché en filigrane sur la vignette. Déduit du titre si absent. */
   monogram?: string
+  /** Capture du projet. À défaut, une vignette est générée à partir du titre. */
+  image?: string
   summary: string
   description: string
   stack: string[]
@@ -314,6 +316,28 @@ export const projects: Project[] = [
     stack: ['Flutter', 'Supabase'],
     links: {},
     accent: 'mixed',
+    featured: true,
+  },
+  {
+    id: 'robot-emploi',
+    title: 'Robot Emploi CI',
+    category: 'Automatisation & Veille',
+    monogram: 'RE',
+    image: '/imgs/projets/robot-emploi.webp',
+    summary:
+      "Un robot qui surveille en continu les sites d'emploi ivoiriens et envoie par email les offres qui correspondent à un profil précis.",
+    description:
+      "Chercher un emploi en Côte d'Ivoire, c'est visiter les mêmes sites plusieurs fois par jour et relire les mêmes annonces. Ce script tourne à la place du candidat, vingt-quatre heures sur vingt-quatre : il parcourt EmploiCI, Afriwork, LinkedIn et JobnetAfrica, filtre chaque annonce selon le profil et les compétences visées, écarte celles déjà vues, puis compose toutes les six heures un rapport envoyé par email — avec, pour chaque offre, le lien direct pour postuler. Les résultats partent aussi en Excel et en notification Telegram.",
+    stack: ['Python', 'Scraping', 'SMTP', 'Telegram Bot API', 'Excel'],
+    highlights: [
+      'Veille continue sur EmploiCI, Afriwork, LinkedIn et JobnetAfrica',
+      'Filtrage par profil, compétences et mots-clés',
+      'Rapport email toutes les six heures, lien direct pour postuler',
+      'Mémoire des annonces déjà vues : aucun doublon d’un rapport à l’autre',
+      'Export Excel et notifications Telegram en parallèle',
+    ],
+    links: {},
+    accent: 'gold',
     featured: true,
   },
   {

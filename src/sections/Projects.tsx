@@ -27,9 +27,22 @@ function ProjectVisual({ project, tall = false }: { project: Project; tall?: boo
       className={`relative overflow-hidden rounded-2xl ${tall ? 'aspect-[4/3] sm:aspect-[16/10]' : 'aspect-[16/10]'}`}
       style={{ background: `linear-gradient(135deg, ${a.from} 0%, #07071a 55%, ${a.to}22 100%)` }}
     >
+      {/* Capture réelle si le projet en a une */}
+      {project.image && (
+        <>
+          <img
+            src={project.image}
+            alt={`Aperçu de ${project.title}`}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <span className="absolute inset-0 bg-gradient-to-t from-void/85 via-void/15 to-void/25" />
+        </>
+      )}
       {/* grille */}
       <div
-        className="absolute inset-0 opacity-[0.16]"
+        className={`absolute inset-0 ${project.image ? 'opacity-0' : 'opacity-[0.16]'}`}
         style={{
           backgroundImage:
             'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
@@ -41,19 +54,23 @@ function ProjectVisual({ project, tall = false }: { project: Project; tall?: boo
 
       {/* halo conique animé */}
       <div
-        className="absolute -right-1/4 -top-1/2 h-[160%] w-[110%] animate-spin-slower opacity-30 blur-xl"
+        className={`absolute -right-1/4 -top-1/2 h-[160%] w-[110%] animate-spin-slower blur-xl ${
+          project.image ? 'opacity-0' : 'opacity-30'
+        }`}
         style={{
           background: `conic-gradient(from 0deg, transparent, ${a.to}, transparent 55%)`,
         }}
       />
 
       {/* initiales */}
-      <span
-        className="absolute bottom-[-6%] left-3 font-display text-[26vw] font-bold leading-none tracking-tighter text-white/[0.07] sm:text-[9rem]"
-        aria-hidden
-      >
-        {initials}
-      </span>
+      {!project.image && (
+        <span
+          className="absolute bottom-[-6%] left-3 font-display text-[26vw] font-bold leading-none tracking-tighter text-white/[0.07] sm:text-[9rem]"
+          aria-hidden
+        >
+          {initials}
+        </span>
+      )}
 
       {/* badge année */}
       {project.year && (
