@@ -262,6 +262,7 @@ export const projects: Project[] = [
     title: 'ApeX',
     category: 'SaaS Gestion & Comptabilité',
     monogram: 'AX',
+    image: '/imgs/projets/apex.webp',
     summary:
       "Application cloud tout-en-un de gestion et de comptabilité pour les TPE et PME ivoiriennes, avec assistant IA intégré.",
     description:
@@ -282,17 +283,19 @@ export const projects: Project[] = [
   {
     id: 'masjid-finder',
     title: 'Masjid Finder',
-    category: 'Application mobile communautaire',
+    category: 'Mobilité & Communauté',
     monogram: 'MF',
+    image: '/imgs/projets/masjid-finder.webp',
     summary:
-      "Connecte les musulmans aux mosquées autour d'eux : horaires de prière validés localement et itinéraire GPS immédiat.",
+      "Trouver une mosquée quand on ne connaît pas la ville : pensée pour les voyageurs, les touristes et les professionnels en déplacement.",
     description:
-      "Masjid Finder combine les données ouvertes d'OpenStreetMap et l'engagement de la communauté. Des points focaux valident localement les horaires de prière, ce qui règle le problème des données génériques et souvent fausses. L'application reste volontairement simple : trouver une mosquée proche, connaître l'heure exacte de la prochaine prière, et lancer l'itinéraire.",
+      "En déplacement, la question n'est pas de savoir quelle mosquée on préfère, mais laquelle se trouve à proximité et dans combien de temps commence la prochaine prière. Masjid Finder répond exactement à ça : la carte affiche les mosquées autour de soi, l'itinéraire se lance en un geste, et les horaires du jour sont validés localement par des points focaux plutôt que calculés de façon générique — car un horaire théorique ne correspond pas toujours à celui réellement pratiqué sur place. Le recensement s'appuie sur les données ouvertes d'OpenStreetMap, enrichies par la communauté.",
     stack: ['Flutter', 'Supabase', 'PostgreSQL', 'MapTiler'],
     highlights: [
-      'Horaires de prière validés par des points focaux locaux',
-      'Recensement des mosquées appuyé sur OpenStreetMap',
-      'Itinéraire GPS lancé en un geste',
+      'Pensée pour les voyageurs, touristes et professionnels en déplacement',
+      'Carte des mosquées alentour et itinéraire lancé en un geste',
+      'Horaires validés localement, pas seulement calculés',
+      'Recensement appuyé sur OpenStreetMap, enrichi par la communauté',
     ],
     links: {},
     accent: 'violet',
