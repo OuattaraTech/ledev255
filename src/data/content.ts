@@ -371,6 +371,15 @@ export const ongoing = [
     stack: ['Flutter', 'Supabase', 'TensorFlow Lite'],
   },
   {
+    title: 'Prep AI',
+    status: 'Conception',
+    progress: 10,
+    eta: '',
+    text: "Simulateur d'entretien d'embauche. L'IA mène la conversation, pose les questions du poste visé, puis note la prestation et détaille les points à travailler. On s'entraîne autant de fois qu'on veut avant le vrai rendez-vous, sans mobiliser personne.",
+    // ⚠️ À COMPLÉTER — indique-moi les technologies retenues
+    stack: [],
+  },
+  {
     title: 'KernSys',
     status: 'En développement',
     progress: 30,
