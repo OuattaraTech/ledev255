@@ -24,7 +24,11 @@ function ProjectVisual({ project, tall = false }: { project: Project; tall?: boo
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl ${tall ? 'aspect-[4/3] sm:aspect-[16/10]' : 'aspect-[16/10]'}`}
+      className={`relative overflow-hidden rounded-2xl ${
+        // Une capture garde toujours son format 16:10 : sur un cadre plus haut,
+        // elle serait rognée sur les côtés et perdrait ses bords.
+        project.image ? 'aspect-[16/10]' : tall ? 'aspect-[4/3] sm:aspect-[16/10]' : 'aspect-[16/10]'
+      }`}
       style={{ background: `linear-gradient(135deg, ${a.from} 0%, #07071a 55%, ${a.to}22 100%)` }}
     >
       {/* Capture réelle si le projet en a une */}
@@ -35,9 +39,9 @@ function ProjectVisual({ project, tall = false }: { project: Project; tall?: boo
             alt={`Aperçu de ${project.title}`}
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-contain"
           />
-          <span className="absolute inset-0 bg-gradient-to-t from-void/85 via-void/15 to-void/25" />
+          <span className="absolute inset-0 bg-gradient-to-t from-void/70 via-transparent to-void/10" />
         </>
       )}
       {/* grille */}
@@ -79,8 +83,13 @@ function ProjectVisual({ project, tall = false }: { project: Project; tall?: boo
         </span>
       )}
 
-      {/* stack flottante */}
-      <div className="absolute inset-x-4 bottom-4 flex flex-wrap gap-1.5">
+      {/* Stack flottante — inutile par-dessus une capture, où elle
+          encombre l'écran du produit. Elle reste affichée sous le texte. */}
+      <div
+        className={`absolute inset-x-4 bottom-4 flex-wrap gap-1.5 ${
+          project.image ? 'hidden' : 'flex'
+        }`}
+      >
         {project.stack.slice(0, 4).map((s) => (
           <span
             key={s}
