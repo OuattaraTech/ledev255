@@ -413,6 +413,23 @@ export const services = [
   },
 ]
 
+/* ─────────────────────────── ASSISTANT IA ─────────────────────────── */
+export const assistant = {
+  name: 'Assistant Dev225',
+  subtitle: 'Posez vos questions sur son parcours et ses projets',
+  greeting:
+    "Bonjour. Je réponds aux questions sur le parcours, les compétences et les projets d'Ouattara Yaya. Que voulez-vous savoir ?",
+  suggestions: [
+    'Quels sont ses projets phares ?',
+    'Avec quelles technologies travaille-t-il ?',
+    'Peut-il m’aider sur une application mobile ?',
+    'Comment le contacter ?',
+  ],
+  disclaimer:
+    'Réponses générées par IA à partir du contenu de ce site. En cas de doute, écrivez-lui directement.',
+  placeholder: 'Écrivez votre question…',
+}
+
 export const navLinks = [
   { id: 'accueil', label: 'Accueil' },
   { id: 'parcours', label: 'Parcours' },

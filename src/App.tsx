@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Assistant from './components/Assistant'
 import Cursor from './components/Cursor'
 import Nav from './components/Nav'
 import Preloader from './components/Preloader'
@@ -44,6 +45,7 @@ export default function App() {
       </main>
 
       <Footer />
+      <Assistant />
       <WhatsAppFab />
     </MotionProvider>
   )

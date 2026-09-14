@@ -33,7 +33,8 @@ export default function WhatsAppFab() {
           exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.6, y: 16 }}
           transition={{ type: 'spring', stiffness: 360, damping: 24 }}
           className="fixed right-5 z-30 sm:right-7"
-          style={{ bottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}
+          // l'assistant occupe le coin : le bouton WhatsApp se place juste au-dessus
+          style={{ bottom: 'calc(max(1.25rem, env(safe-area-inset-bottom)) + 4.5rem)' }}
         >
           <a
             href={href}
