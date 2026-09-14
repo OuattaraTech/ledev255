@@ -1,0 +1,99 @@
+/**
+ * Protocole des marqueurs d'action.
+ *
+ * L'assistante peut terminer sa réponse par des marqueurs que le site
+ * transforme en boutons. Ils sont retirés du texte affiché.
+ */
+
+export type Action =
+  | { kind: 'section'; id: string; label: string }
+  | { kind: 'project'; id: string; label: string }
+  | { kind: 'contact'; label: string }
+  | { kind: 'whatsapp'; text: string; label: string }
+
+export type Lead = { nom: string; contact: string; besoin: string }
+
+export type Parsed = {
+  text: string
+  actions: Action[]
+  followups: string[]
+  lead?: Lead
+}
+
+const MARKER = /\[\[(VOIR|PROJET|CONTACT|WHATSAPP|LEAD|SUIVANT)(?::([^\]]*))?\]\]/g
+
+const SECTION_LABELS: Record<string, string> = {
+  accueil: 'Revenir en haut',
+  parcours: 'Voir son parcours',
+  competences: 'Voir ses compétences',
+  ia: 'Voir son usage de l’IA',
+  projets: 'Voir ses projets',
+  encours: 'Voir ce qu’il construit',
+  contact: 'Aller au contact',
+}
+
+/**
+ * Coupe un marqueur encore incomplet en fin de flux, pour qu'il
+ * n'apparaisse pas à l'écran pendant la frappe.
+ */
+function trimPartialMarker(text: string) {
+  const open = text.lastIndexOf('[[')
+  if (open === -1) return text
+  return text.indexOf(']]', open) === -1 ? text.slice(0, open) : text
+}
+
+export function parseReply(raw: string, projectTitle: (id: string) => string | null): Parsed {
+  const actions: Action[] = []
+  const followups: string[] = []
+  let lead: Lead | undefined
+
+  let match: RegExpExecArray | null
+  MARKER.lastIndex = 0
+  while ((match = MARKER.exec(raw))) {
+    const [, kind, argRaw = ''] = match
+    const arg = argRaw.trim()
+
+    if (kind === 'VOIR' && SECTION_LABELS[arg]) {
+      actions.push({ kind: 'section', id: arg, label: SECTION_LABELS[arg] })
+    } else if (kind === 'PROJET') {
+      const title = projectTitle(arg)
+      if (title) actions.push({ kind: 'project', id: arg, label: `Ouvrir ${title}` })
+    } else if (kind === 'CONTACT') {
+      actions.push({ kind: 'contact', label: 'Écrire à Yaya' })
+    } else if (kind === 'WHATSAPP' && arg) {
+      actions.push({ kind: 'whatsapp', text: arg, label: 'Ouvrir WhatsApp' })
+    } else if (kind === 'SUIVANT' && arg) {
+      arg
+        .split(';')
+        .map((q) => q.trim())
+        .filter(Boolean)
+        .slice(0, 3)
+        .forEach((q) => followups.push(q))
+    } else if (kind === 'LEAD' && arg) {
+      const [nom = '', contact = '', ...reste] = arg.split(';').map((v) => v.trim())
+      if (nom && contact) lead = { nom, contact, besoin: reste.join(' ; ') }
+    }
+  }
+
+  const text = trimPartialMarker(raw.replace(MARKER, '')).replace(/\n{3,}/g, '\n\n').trim()
+
+  return { text, actions: actions.slice(0, 2), followups, lead }
+}
+
+/** Événement écouté par la section Projets pour ouvrir une fiche. */
+export const OPEN_PROJECT = 'dev225:ouvrir-projet'
+
+export function openProject(id: string) {
+  window.dispatchEvent(new CustomEvent(OPEN_PROJECT, { detail: id }))
+}
+
+export function goToSection(id: string) {
+  const el = document.getElementById(id)
+  if (!el) return
+  const link = document.createElement('a')
+  link.href = `#${id}`
+  // passe par le gestionnaire de défilement fluide déjà en place
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+}

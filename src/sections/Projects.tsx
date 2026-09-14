@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { OPEN_PROJECT } from '../lib/assistant'
 import AuroraPlane from '../components/three/AuroraPlane'
 import { Reveal, SectionHeading, TiltCard } from '../components/primitives'
 import { projects, type Project } from '../data/content'
@@ -223,6 +224,17 @@ export default function Projects() {
   const [selected, setSelected] = useState<Project | null>(null)
   const featured = projects.filter((p) => p.featured)
   const others = projects.filter((p) => !p.featured)
+
+  // L'assistante peut ouvrir une fiche projet à la demande du visiteur.
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const id = (e as CustomEvent<string>).detail
+      const found = projects.find((p) => p.id === id)
+      if (found) setSelected(found)
+    }
+    window.addEventListener(OPEN_PROJECT, onOpen)
+    return () => window.removeEventListener(OPEN_PROJECT, onOpen)
+  }, [])
 
   return (
     <section id="projets" className="relative overflow-hidden py-20 sm:py-28 lg:py-36">

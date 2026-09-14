@@ -1,4 +1,4 @@
-import { SYSTEM, profil } from './_profil'
+import { SYSTEM, profil, vocabulaire } from './_profil'
 
 const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast'
 const MAX_MESSAGES = 12 // tours conservés dans l'historique
@@ -51,12 +51,15 @@ export async function onRequestPost({ env, request }) {
     return json({ error: 'quota' }, 429)
   }
 
-  const system = SYSTEM.replace('__FICHE__', profil())
+  const { sections, projets } = vocabulaire()
+  const system = SYSTEM.replace('__SECTIONS__', sections)
+    .replace('__PROJETS__', projets)
+    .replace('__FICHE__', profil())
 
   try {
     const stream = await env.AI.run(MODEL, {
       messages: [{ role: 'system', content: system }, ...messages],
-      max_tokens: 420,
+      max_tokens: 480,
       temperature: 0.3,
       stream: true,
     })

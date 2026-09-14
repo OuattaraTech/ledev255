@@ -413,21 +413,24 @@ export const services = [
   },
 ]
 
-/* ─────────────────────────── ASSISTANT IA ─────────────────────────── */
+/* ─────────────────────────── ASSISTANTE IA ───────────────────────────
+   Le prénom se change ici, il est repris partout. La personnalité, elle,
+   se règle dans functions/api/_profil.js */
 export const assistant = {
-  name: 'Assistant Dev225',
-  subtitle: 'Posez vos questions sur son parcours et ses projets',
+  name: 'Kora',
+  role: 'Assistante de Yaya',
   greeting:
-    "Bonjour. Je réponds aux questions sur le parcours, les compétences et les projets d'Ouattara Yaya. Que voulez-vous savoir ?",
+    "Bonjour, je suis Kora. Je travaille avec Ouattara Yaya : je connais son parcours, ses projets et ce qu'il peut construire. Qu'est-ce qui vous amène ?",
   suggestions: [
     'Quels sont ses projets phares ?',
-    'Avec quelles technologies travaille-t-il ?',
-    'Peut-il m’aider sur une application mobile ?',
+    'Il travaille avec quelles technologies ?',
+    'J’ai un projet, il peut m’aider ?',
     'Comment le contacter ?',
   ],
   disclaimer:
-    'Réponses générées par IA à partir du contenu de ce site. En cas de doute, écrivez-lui directement.',
-  placeholder: 'Écrivez votre question…',
+    'Kora est une IA. Elle répond à partir du contenu de ce site et peut se tromper.',
+  placeholder: 'Écrivez votre message…',
+  leadConfirm: 'Demande transmise à Yaya.',
 }
 
 export const navLinks = [

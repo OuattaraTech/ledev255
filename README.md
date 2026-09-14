@@ -108,6 +108,33 @@ Le serveur de développement habituel (`npm run dev`) ne sert pas les fonctions 
 
 ---
 
+## Assistante IA
+
+Kora répond aux visiteurs sur le parcours, les compétences et les projets. Elle tourne sur **Cloudflare Workers AI**, inclus dans le plan gratuit : aucune clé d'API, aucune donnée envoyée à un service tiers.
+
+**Sa fiche de connaissances** est construite automatiquement à partir de `src/data/content.ts` (voir `functions/api/_profil.js`). Ajouter un projet suffit à le lui apprendre.
+
+**Son caractère et ses règles** se règlent dans `functions/api/_profil.js`, constante `SYSTEM`. Son prénom et ses phrases d'accueil sont dans `src/data/content.ts`, bloc `assistant`.
+
+**Ce qu'elle sait faire au-delà de répondre :**
+
+- emmener le visiteur à une section, ouvrir la fiche d'un projet, ouvrir WhatsApp — elle propose un bouton, le visiteur décide ;
+- recueillir une demande (nom, contact, besoin) et l'enregistrer pour vous.
+
+**Relever les demandes reçues :**
+
+```bash
+npm run demandes
+```
+
+Le script lit le stockage KV du projet ; votre authentification Cloudflare suffit, il n'y a pas de secret à gérer.
+
+Pour les consulter depuis un navigateur, définir une variable `LEADS_KEY` dans Cloudflare (Settings → Variables and Secrets) puis ouvrir `https://…/api/lead?k=<valeur>`. Sans cette variable, la route refuse tout accès.
+
+**Garde-fous :** 30 messages par visiteur et par jour, longueur de question et historique plafonnés, refus des tentatives de détournement de consigne, interdiction d'inventer.
+
+---
+
 ## Déploiement sur Cloudflare Pages
 
 ### Via l'interface web

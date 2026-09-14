@@ -8,8 +8,9 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
-    "preview:cf": "vite build && wrangler pages dev dist --kv VIEWS",
-    "deploy": "vite build && wrangler pages deploy dist"
+    "preview:cf": "vite build && wrangler pages dev dist --kv VIEWS --ai AI",
+    "deploy": "vite build && wrangler pages deploy dist",
+    "demandes": "node scripts/demandes.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.3",

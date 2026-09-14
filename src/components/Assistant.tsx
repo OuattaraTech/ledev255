@@ -1,49 +1,130 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { assistant, contact, identity } from '../data/content'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { assistant, contact, identity, projects } from '../data/content'
 import { useReducedMotion } from '../hooks/useMotionPreference'
+import {
+  goToSection,
+  openProject,
+  parseReply,
+  type Action,
+  type Lead,
+} from '../lib/assistant'
 
-type Message = { role: 'user' | 'assistant'; content: string }
+type Msg = { role: 'user' | 'assistant'; raw: string }
 
+const STORE = 'dev225:kora'
 const ERRORS: Record<number, string> = {
-  429: "Vous avez atteint la limite de questions pour aujourd'hui. Écrivez directement à Ouattara, il répond sous 24 h.",
-  503: "L'assistant est momentanément indisponible. Vous pouvez écrire à Ouattara en attendant.",
+  429: "Vous avez atteint la limite de messages pour aujourd'hui. Écrivez directement à Yaya, il répond sous 24 h.",
+  503: 'Je suis momentanément indisponible. Vous pouvez écrire à Yaya en attendant.',
 }
+
+const titleOf = (id: string) => projects.find((p) => p.id === id)?.title ?? null
 
 export default function Assistant() {
   const [available, setAvailable] = useState(false)
   const [open, setOpen] = useState(false)
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Msg[]>([])
   const [draft, setDraft] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [atBottom, setAtBottom] = useState(true)
+  const [leadSent, setLeadSent] = useState(false)
   const reduced = useReducedMotion()
 
+  const scroller = useRef<HTMLDivElement>(null)
   const bottom = useRef<HTMLDivElement>(null)
   const input = useRef<HTMLTextAreaElement>(null)
-  const panel = useRef<HTMLDivElement>(null)
+  const abort = useRef<AbortController | null>(null)
+  const sentLeads = useRef<Set<string>>(new Set())
 
-  // L'assistant ne s'affiche que si la route serveur répond.
+  /* ── disponibilité et mémoire de session ── */
+
   useEffect(() => {
     const ac = new AbortController()
     fetch('/api/chat', { signal: ac.signal })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => setAvailable(Boolean(d?.ok)))
       .catch(() => setAvailable(false))
+    try {
+      const saved = sessionStorage.getItem(STORE)
+      if (saved) setMessages(JSON.parse(saved).slice(-20))
+    } catch {
+      // stockage indisponible : la conversation vivra le temps de la page
+    }
     return () => ac.abort()
   }, [])
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(STORE, JSON.stringify(messages.slice(-20)))
+    } catch {
+      /* sans stockage, on continue */
+    }
+  }, [messages])
+
+  /* ── défilement ── */
+
+  useEffect(() => {
+    if (atBottom) {
+      bottom.current?.scrollIntoView({ block: 'end', behavior: reduced ? 'auto' : 'smooth' })
+    }
+  }, [messages, busy, atBottom, reduced])
+
+  const onScroll = useCallback(() => {
+    const el = scroller.current
+    if (!el) return
+    setAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < 60)
+  }, [])
+
+  /* ── clavier ── */
 
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
     window.addEventListener('keydown', onKey)
-    input.current?.focus()
-    return () => window.removeEventListener('keydown', onKey)
+    const t = setTimeout(() => input.current?.focus(), 120)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      clearTimeout(t)
+    }
   }, [open])
 
-  useEffect(() => {
-    bottom.current?.scrollIntoView({ block: 'end', behavior: reduced ? 'auto' : 'smooth' })
-  }, [messages, busy, reduced])
+  /* ── actions décidées par l'assistante ── */
+
+  const runAction = useCallback((a: Action) => {
+    const narrow = window.matchMedia('(max-width: 639px)').matches
+    if (a.kind === 'whatsapp') {
+      window.open(`${contact.whatsapp}`, '_blank', 'noopener')
+      return
+    }
+    if (narrow) setOpen(false)
+    setTimeout(() => {
+      if (a.kind === 'section') goToSection(a.id)
+      else if (a.kind === 'project') openProject(a.id)
+      else if (a.kind === 'contact') {
+        goToSection('contact')
+        setTimeout(() => document.getElementById('name')?.focus(), 900)
+      }
+    }, narrow ? 260 : 0)
+  }, [])
+
+  const sendLead = useCallback(async (lead: Lead) => {
+    const key = `${lead.nom}|${lead.contact}`
+    if (sentLeads.current.has(key)) return
+    sentLeads.current.add(key)
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(lead),
+      })
+      setLeadSent(true)
+    } catch {
+      /* l'assistante a déjà confirmé oralement ; on n'alarme pas le visiteur */
+    }
+  }, [])
+
+  /* ── envoi ── */
 
   const send = useCallback(
     async (text: string) => {
@@ -52,20 +133,27 @@ export default function Assistant() {
 
       setError(null)
       setDraft('')
-      const next: Message[] = [...messages, { role: 'user', content: question }]
-      setMessages([...next, { role: 'assistant', content: '' }])
+      setAtBottom(true)
+      const next: Msg[] = [...messages, { role: 'user', raw: question }]
+      setMessages([...next, { role: 'assistant', raw: '' }])
       setBusy(true)
+
+      const ac = new AbortController()
+      abort.current = ac
 
       try {
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ messages: next }),
+          signal: ac.signal,
+          body: JSON.stringify({
+            messages: next.map((m) => ({ role: m.role, content: m.raw })),
+          }),
         })
 
         if (!res.ok || !res.body) {
           setMessages(next)
-          setError(ERRORS[res.status] ?? "La réponse n'a pas abouti. Réessayez dans un instant.")
+          setError(ERRORS[res.status] ?? "Ma réponse n'a pas abouti. Réessayez dans un instant.")
           return
         }
 
@@ -88,10 +176,10 @@ export default function Assistant() {
               const chunk = JSON.parse(payload)
               if (typeof chunk.response === 'string') {
                 answer += chunk.response
-                setMessages([...next, { role: 'assistant', content: answer }])
+                setMessages([...next, { role: 'assistant', raw: answer }])
               }
             } catch {
-              // fragment incomplet : il sera complété au tour suivant
+              /* fragment incomplet, complété au tour suivant */
             }
           }
         }
@@ -99,111 +187,165 @@ export default function Assistant() {
         if (!answer.trim()) {
           setMessages(next)
           setError("Aucune réponse n'est revenue. Réessayez.")
+          return
         }
-      } catch {
+
+        const parsed = parseReply(answer, titleOf)
+        if (parsed.lead) void sendLead(parsed.lead)
+      } catch (e) {
+        if ((e as Error).name === 'AbortError') return
         setMessages(next)
         setError('Connexion interrompue. Vérifiez votre réseau et réessayez.')
       } finally {
+        abort.current = null
         setBusy(false)
         input.current?.focus()
       }
     },
-    [busy, messages],
+    [busy, messages, sendLead],
   )
+
+  const reset = useCallback(() => {
+    abort.current?.abort()
+    setMessages([])
+    setError(null)
+    setLeadSent(false)
+    sentLeads.current.clear()
+    try {
+      sessionStorage.removeItem(STORE)
+    } catch {
+      /* rien à nettoyer */
+    }
+    input.current?.focus()
+  }, [])
+
+  const lastAssistant = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].role === 'assistant') return i
+    }
+    return -1
+  }, [messages])
 
   if (!available) return null
 
   return (
     <>
-      {/* Lanceur */}
+      {/* ── Lanceur ── */}
       <AnimatePresence>
         {!open && (
           <motion.button
             type="button"
             onClick={() => setOpen(true)}
-            aria-label={`Ouvrir ${assistant.name}`}
+            aria-label={`Parler à ${assistant.name}`}
             data-cursor="grow"
             initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.7 }}
             animate={reduced ? { opacity: 1 } : { opacity: 1, scale: 1 }}
             exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.7 }}
             transition={{ type: 'spring', stiffness: 380, damping: 26 }}
-            className="group fixed right-5 z-40 grid h-14 w-14 place-items-center rounded-full
-                       shadow-[0_12px_38px_-10px_rgba(125,85,255,0.85)] sm:right-7 sm:h-[3.75rem] sm:w-[3.75rem]"
+            className="group fixed right-5 z-40 flex items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-1.5
+                       shadow-[0_12px_38px_-10px_rgba(125,85,255,0.85)] sm:right-7 sm:pr-5"
             style={{
               bottom: 'max(1.25rem, env(safe-area-inset-bottom))',
-              background: 'linear-gradient(135deg,#ffd98a,#f5c451 30%,#7d55ff)',
+              background: 'linear-gradient(135deg,#ffd98a,#f5c451 28%,#7d55ff)',
             }}
           >
-            <span className="absolute inset-[2px] rounded-full bg-void/90" />
-            <SparkIcon className="relative h-6 w-6" />
-            <span className="absolute -right-0.5 -top-0.5 flex h-3 w-3">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
-              <span className="relative inline-flex h-3 w-3 rounded-full border-2 border-void bg-emerald-400" />
+            <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full bg-void/90">
+              <SparkIcon className="h-[22px] w-[22px]" />
+              <span className="absolute -right-0.5 -top-0.5 flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+                <span className="relative inline-flex h-3 w-3 rounded-full border-2 border-void bg-emerald-400" />
+              </span>
+            </span>
+            <span className="hidden text-left font-display text-[13px] font-semibold leading-tight text-void sm:block">
+              {assistant.name}
+              <span className="block font-sans text-[10px] font-normal opacity-70">
+                Posez-moi vos questions
+              </span>
             </span>
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* Panneau */}
+      {/* ── Voile mobile ── */}
       <AnimatePresence>
         {open && (
           <motion.div
-            ref={panel}
-            role="dialog"
-            aria-modal="false"
-            aria-label={assistant.name}
-            initial={reduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.97 }}
-            animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
-            exit={reduced ? { opacity: 0 } : { opacity: 0, y: 20, scale: 0.97 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-x-3 top-20 z-[70] flex flex-col overflow-hidden rounded-3xl glass-strong
-                       shadow-[0_30px_90px_-30px_rgba(0,0,0,0.95)]
-                       sm:inset-x-auto sm:right-7 sm:top-auto sm:h-[min(620px,calc(100dvh-8rem))] sm:w-[390px]"
-            style={{ bottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
-          >
-            {/* En-tête */}
-            <div className="flex items-center gap-3 border-b border-line px-4 py-3">
-              <img src={identity.logoMark} alt="" aria-hidden className="h-8 w-auto" />
-              <div className="min-w-0 flex-1">
-                <p className="truncate font-display text-[15px] font-semibold text-chalk">
-                  {assistant.name}
-                </p>
-                <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-muted">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  En ligne
-                </p>
-              </div>
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Fermer l’assistant"
-                className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-chalk/70 transition-colors hover:border-gold-400/50 hover:text-gold-300"
-              >
-                ✕
-              </button>
-            </div>
+            className="fixed inset-0 z-[60] bg-void/70 backdrop-blur-sm sm:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
-            {/* Conversation */}
-            <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+      {/* ── Panneau ── */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            role="dialog"
+            aria-label={`${assistant.name}, ${assistant.role}`}
+            initial={reduced ? { opacity: 0 } : { opacity: 0, y: 28, scale: 0.98 }}
+            animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, y: 22, scale: 0.98 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-x-0 bottom-0 top-14 z-[70] flex flex-col overflow-hidden rounded-t-3xl glass-strong
+                       shadow-[0_-20px_80px_-30px_rgba(0,0,0,0.95)]
+                       sm:inset-x-auto sm:right-7 sm:top-auto sm:h-[min(660px,calc(100dvh-7rem))] sm:w-[400px] sm:rounded-3xl"
+            style={{ bottom: 'max(0px, env(safe-area-inset-bottom))' }}
+          >
+            {/* poignée mobile */}
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Réduire"
+              className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-white/25 sm:hidden"
+            />
+
+            <Header
+              onReset={reset}
+              onClose={() => setOpen(false)}
+              canReset={messages.length > 0}
+            />
+
+            {/* ── Conversation ── */}
+            <div
+              ref={scroller}
+              onScroll={onScroll}
+              className="relative flex-1 space-y-3.5 overflow-y-auto px-4 py-4"
+            >
               <Bubble role="assistant">{assistant.greeting}</Bubble>
 
-              {messages.map((m, i) => (
-                <Bubble key={i} role={m.role}>
-                  {m.content || <Typing />}
-                </Bubble>
-              ))}
+              {messages.map((m, i) =>
+                m.role === 'user' ? (
+                  <Bubble key={i} role="user">
+                    {m.raw}
+                  </Bubble>
+                ) : (
+                  <AssistantTurn
+                    key={i}
+                    raw={m.raw}
+                    isLast={i === lastAssistant}
+                    streaming={busy && i === messages.length - 1}
+                    onAction={runAction}
+                    onFollowup={send}
+                  />
+                ),
+              )}
 
               {messages.length === 0 && (
                 <div className="flex flex-wrap gap-2 pt-1">
                   {assistant.suggestions.map((q) => (
-                    <button
-                      key={q}
-                      onClick={() => send(q)}
-                      className="rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-left text-[12px] leading-snug text-violet-100 transition-colors hover:border-gold-400/50 hover:text-gold-200"
-                    >
+                    <Chip key={q} onClick={() => send(q)}>
                       {q}
-                    </button>
+                    </Chip>
                   ))}
                 </div>
+              )}
+
+              {leadSent && (
+                <p className="rounded-xl border border-emerald-400/25 bg-emerald-500/10 px-3 py-2 text-[12px] text-emerald-200">
+                  ✓ {assistant.leadConfirm}
+                </p>
               )}
 
               {error && (
@@ -218,13 +360,31 @@ export default function Assistant() {
               <div ref={bottom} />
             </div>
 
-            {/* Saisie */}
+            {/* retour en bas */}
+            <AnimatePresence>
+              {!atBottom && (
+                <motion.button
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  onClick={() => {
+                    setAtBottom(true)
+                    bottom.current?.scrollIntoView({ block: 'end', behavior: 'smooth' })
+                  }}
+                  className="absolute bottom-24 left-1/2 z-10 -translate-x-1/2 rounded-full glass-strong px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-chalk/80"
+                >
+                  ↓ Derniers messages
+                </motion.button>
+              )}
+            </AnimatePresence>
+
+            {/* ── Saisie ── */}
             <form
               onSubmit={(e) => {
                 e.preventDefault()
                 send(draft)
               }}
-              className="border-t border-line p-3"
+              className="shrink-0 border-t border-line p-3"
             >
               <div className="flex items-end gap-2">
                 <textarea
@@ -240,20 +400,31 @@ export default function Assistant() {
                   rows={1}
                   maxLength={700}
                   placeholder={assistant.placeholder}
-                  className="max-h-28 min-h-[42px] flex-1 resize-none rounded-xl border border-line bg-white/[0.04] px-3 py-2.5 text-[14px] text-chalk outline-none transition-colors placeholder:text-muted/70 focus:border-gold-400/50"
+                  className="max-h-28 min-h-[44px] flex-1 resize-none rounded-xl border border-line bg-white/[0.04] px-3.5 py-3 text-[14px] leading-snug text-chalk outline-none transition-colors placeholder:text-muted/70 focus:border-gold-400/50"
                 />
-                <button
-                  type="submit"
-                  disabled={busy || !draft.trim()}
-                  aria-label="Envoyer"
-                  className="grid h-[42px] w-[42px] shrink-0 place-items-center rounded-xl bg-gradient-to-br from-gold-300 to-gold-500 text-void transition-opacity disabled:opacity-35"
-                >
-                  <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-current" aria-hidden>
-                    <path d="M3.4 20.4 21 12 3.4 3.6 3.4 10.2 15.6 12 3.4 13.8Z" />
-                  </svg>
-                </button>
+                {busy ? (
+                  <button
+                    type="button"
+                    onClick={() => abort.current?.abort()}
+                    aria-label="Arrêter la réponse"
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-line text-chalk/80 transition-colors hover:border-gold-400/50"
+                  >
+                    <span className="h-3 w-3 rounded-[3px] bg-current" />
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={!draft.trim()}
+                    aria-label="Envoyer"
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-gold-300 to-gold-500 text-void transition-opacity disabled:opacity-30"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] fill-current" aria-hidden>
+                      <path d="M3.4 20.4 21 12 3.4 3.6 3.4 10.2 15.6 12 3.4 13.8Z" />
+                    </svg>
+                  </button>
+                )}
               </div>
-              <p className="mt-2 font-mono text-[9px] leading-relaxed text-muted/80">
+              <p className="mt-2 text-center font-mono text-[9px] leading-relaxed text-muted/70">
                 {assistant.disclaimer}
               </p>
             </form>
@@ -264,26 +435,166 @@ export default function Assistant() {
   )
 }
 
+/* ─────────────────────────── sous-composants ─────────────────────────── */
+
+function Header({
+  onReset,
+  onClose,
+  canReset,
+}: {
+  onReset: () => void
+  onClose: () => void
+  canReset: boolean
+}) {
+  return (
+    <div className="flex shrink-0 items-center gap-3 border-b border-line px-4 py-3">
+      <span className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-violet-700/60 to-gold-500/30">
+        <img src={identity.logoMark} alt="" aria-hidden className="h-6 w-auto" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="truncate font-display text-[15px] font-semibold text-chalk">
+          {assistant.name}
+        </p>
+        <p className="flex items-center gap-1.5 truncate font-mono text-[10px] uppercase tracking-wider text-muted">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          {assistant.role}
+        </p>
+      </div>
+      {canReset && (
+        <button
+          onClick={onReset}
+          aria-label="Nouvelle conversation"
+          title="Nouvelle conversation"
+          className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-chalk/60 transition-colors hover:border-gold-400/50 hover:text-gold-300"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+            <path d="M20 11A8 8 0 1 0 18 16.5" />
+            <path d="M20 5v6h-6" />
+          </svg>
+        </button>
+      )}
+      <button
+        onClick={onClose}
+        aria-label="Fermer"
+        className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-chalk/60 transition-colors hover:border-gold-400/50 hover:text-gold-300"
+      >
+        ✕
+      </button>
+    </div>
+  )
+}
+
+function AssistantTurn({
+  raw,
+  isLast,
+  streaming,
+  onAction,
+  onFollowup,
+}: {
+  raw: string
+  isLast: boolean
+  streaming: boolean
+  onAction: (a: Action) => void
+  onFollowup: (q: string) => void
+}) {
+  const parsed = useMemo(() => parseReply(raw, titleOf), [raw])
+
+  return (
+    <div className="space-y-2">
+      <Bubble role="assistant">{parsed.text ? <Rich text={parsed.text} /> : <Typing />}</Bubble>
+
+      {!streaming && parsed.actions.length > 0 && (
+        <div className="flex flex-wrap gap-2 pl-9">
+          {parsed.actions.map((a, i) => (
+            <button
+              key={i}
+              onClick={() => onAction(a)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-gold-400/40 bg-gold-400/10 px-3 py-1.5 text-[12px] font-medium text-gold-200 transition-colors hover:bg-gold-400/20"
+            >
+              {a.label}
+              <span aria-hidden>→</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {!streaming && isLast && parsed.followups.length > 0 && (
+        <div className="flex flex-wrap gap-2 pl-9">
+          {parsed.followups.map((q) => (
+            <Chip key={q} onClick={() => onFollowup(q)}>
+              {q}
+            </Chip>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Bubble({ role, children }: { role: 'user' | 'assistant'; children: React.ReactNode }) {
   const mine = role === 'user'
+  if (mine) {
+    return (
+      <div className="flex justify-end">
+        <div className="max-w-[86%] whitespace-pre-wrap rounded-2xl rounded-br-sm bg-gradient-to-br from-violet-600 to-violet-700 px-3.5 py-2.5 text-[13.5px] leading-relaxed text-white">
+          {children}
+        </div>
+      </div>
+    )
+  }
   return (
-    <div className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
-      <div
-        className={`max-w-[86%] whitespace-pre-wrap rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-relaxed ${
-          mine
-            ? 'rounded-br-sm bg-gradient-to-br from-violet-600 to-violet-700 text-white'
-            : 'rounded-bl-sm border border-line bg-white/[0.04] text-chalk/90'
-        }`}
-      >
+    <div className="flex items-start gap-2">
+      <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-violet-700/60 to-gold-500/30">
+        <img src={identity.logoMark} alt="" aria-hidden className="h-4 w-auto" />
+      </span>
+      <div className="max-w-[86%] rounded-2xl rounded-bl-sm border border-line bg-white/[0.04] px-3.5 py-2.5 text-[13.5px] leading-relaxed text-chalk/90">
         {children}
       </div>
     </div>
   )
 }
 
+/** Rendu léger : gras, retours à la ligne, liens. Aucun HTML injecté. */
+function Rich({ text }: { text: string }) {
+  const nodes = useMemo(() => {
+    const out: React.ReactNode[] = []
+    const re = /(\*\*[^*]+\*\*)|(https?:\/\/[^\s)]+)|(\n)/g
+    let last = 0
+    let m: RegExpExecArray | null
+    let k = 0
+    while ((m = re.exec(text))) {
+      if (m.index > last) out.push(text.slice(last, m.index))
+      if (m[1]) out.push(<strong key={k++} className="font-semibold text-chalk">{m[1].slice(2, -2)}</strong>)
+      else if (m[2])
+        out.push(
+          <a key={k++} href={m[2]} target="_blank" rel="noreferrer noopener" className="text-gold-300 underline underline-offset-2">
+            {m[2].replace(/^https?:\/\//, '')}
+          </a>,
+        )
+      else out.push(<br key={k++} />)
+      last = m.index + m[0].length
+    }
+    if (last < text.length) out.push(text.slice(last))
+    return out
+  }, [text])
+
+  return <>{nodes}</>
+}
+
+function Chip({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 text-left text-[12px] leading-snug text-violet-100 transition-colors hover:border-gold-400/50 hover:text-gold-200"
+    >
+      {children}
+    </button>
+  )
+}
+
 function Typing() {
   return (
-    <span className="inline-flex gap-1 py-1" aria-label="L’assistant rédige">
+    <span className="inline-flex gap-1 py-1" aria-label="Kora rédige">
       {[0, 1, 2].map((i) => (
         <span
           key={i}
@@ -298,10 +609,7 @@ function Typing() {
 function SparkIcon({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <path
-        d="M12 2.6 13.9 9 20.3 10.9 13.9 12.8 12 19.2 10.1 12.8 3.7 10.9 10.1 9Z"
-        fill="url(#spark)"
-      />
+      <path d="M12 2.6 13.9 9 20.3 10.9 13.9 12.8 12 19.2 10.1 12.8 3.7 10.9 10.1 9Z" fill="url(#spark)" />
       <path d="M18.4 15.2 19.3 18 22.1 18.9 19.3 19.8 18.4 22.6 17.5 19.8 14.7 18.9 17.5 18Z" fill="#f5c451" />
       <defs>
         <linearGradient id="spark" x1="3" y1="2" x2="20" y2="19" gradientUnits="userSpaceOnUse">
