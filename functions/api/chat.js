@@ -32,6 +32,23 @@ async function capterDemande(flux, env, request) {
   console.log(ok ? `demande enregistrée : ${demande.nom}` : 'demande refusée : incomplète')
 }
 
+/**
+ * Heure locale du visiteur, déduite du fuseau que Cloudflare attache à la
+ * requête. Sans lui, Abidjan : c'est là que sont la plupart des visiteurs.
+ */
+function heureLocale(request) {
+  const zone = request.cf?.timezone || 'Africa/Abidjan'
+  try {
+    return new Intl.DateTimeFormat('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: zone,
+    }).format(new Date())
+  } catch {
+    return `${new Date().toISOString().slice(11, 16)} UTC`
+  }
+}
+
 /** Compteur journalier par adresse IP, pour protéger le quota gratuit. */
 async function overQuota(env, request) {
   if (!env.VIEWS) return false
@@ -73,7 +90,8 @@ export async function onRequestPost({ env, request, waitUntil }) {
   }
 
   const { sections, projets } = vocabulaire()
-  const system = SYSTEM.replace('__SECTIONS__', sections)
+  const system = SYSTEM.replace('__MOMENT__', heureLocale(request))
+    .replace('__SECTIONS__', sections)
     .replace('__PROJETS__', projets)
     .replace('__FICHE__', profil())
 

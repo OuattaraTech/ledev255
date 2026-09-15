@@ -417,8 +417,9 @@ export const assistant = {
   name: 'Kora',
   role: 'Assistante de Yaya',
   avatar: '/imgs/kora.webp',
+  /** Le mot de salutation est ajouté à l'affichage, selon l'heure du visiteur. */
   greeting:
-    "Bonjour, je suis Kora. Je travaille avec Ouattara Yaya : je connais son parcours, ses projets et ce qu'il peut construire. Qu'est-ce qui vous amène ?",
+    "je suis Kora. Je travaille avec Ouattara Yaya : je connais son parcours, ses projets et ce qu'il peut construire. Qu'est-ce qui vous amène ?",
   suggestions: [
     'Quels sont ses projets phares ?',
     'Il travaille avec quelles technologies ?',

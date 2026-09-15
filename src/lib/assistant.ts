@@ -116,6 +116,17 @@ export function parseReply(raw: string, projectTitle: (id: string) => string | n
   return { text, actions: actions.slice(0, 2), followups: relances, lead }
 }
 
+/**
+ * Mot de salutation adapté à l'heure du visiteur.
+ *
+ * Le français n'en a que deux, et la bascule se fait vers 18 h. Au-delà
+ * de minuit on reste sur « Bonsoir » : personne ne dit « bonjour » à 3 h.
+ */
+export function salutation(d = new Date()) {
+  const h = d.getHours()
+  return h >= 5 && h < 18 ? 'Bonjour' : 'Bonsoir'
+}
+
 /** Événement écouté par la section Projets pour ouvrir une fiche. */
 export const OPEN_PROJECT = 'dev225:ouvrir-projet'
 

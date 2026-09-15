@@ -7,6 +7,7 @@ import {
   goToSection,
   openProject,
   parseReply,
+  salutation,
   type Action,
 } from '../lib/assistant'
 
@@ -326,7 +327,9 @@ export default function Assistant() {
               onScroll={onScroll}
               className="relative flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-4 py-4"
             >
-              <Bubble role="assistant">{assistant.greeting}</Bubble>
+              <Bubble role="assistant">
+                {salutation()}, {assistant.greeting}
+              </Bubble>
 
               {messages.map((m, i) =>
                 m.role === 'user' ? (
