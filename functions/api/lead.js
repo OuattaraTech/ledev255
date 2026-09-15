@@ -1,7 +1,7 @@
 /**
  * Demandes recueillies par l'assistante.
  *
- * POST /api/lead              enregistre une demande
+ * POST /api/lead              enregistre une demande, puis prévient sur Telegram
  * GET  /api/lead?k=<secret>   liste les demandes (secret LEADS_KEY)
  *
  * Le secret se déclare dans le tableau de bord Cloudflare :
@@ -17,7 +17,41 @@ const json = (data, status = 200) =>
     headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
   })
 
-export async function onRequestPost({ env, request }) {
+/**
+ * Envoie l'alerte Telegram. Demande deux variables dans Cloudflare :
+ * TELEGRAM_BOT_TOKEN et TELEGRAM_CHAT_ID. Sans elles on n'envoie rien,
+ * la demande reste consultable par `npm run demandes`.
+ */
+async function prevenirTelegram(env, lead) {
+  const token = env.TELEGRAM_BOT_TOKEN
+  const chat = env.TELEGRAM_CHAT_ID
+  if (!token || !chat) return
+
+  const esc = (v) => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  const date = new Date(lead.recu).toLocaleString('fr-FR', { timeZone: 'Africa/Abidjan' })
+
+  const lignes = [
+    '💬 <b>Nouvelle demande</b>',
+    '',
+    `<b>${esc(lead.nom)}</b>`,
+    esc(lead.contact) + (lead.pays ? `  ·  ${esc(lead.pays)}` : ''),
+  ]
+  if (lead.besoin) lignes.push('', esc(lead.besoin))
+  lignes.push('', date)
+
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: chat,
+      text: lignes.join('\n'),
+      parse_mode: 'HTML',
+      disable_web_page_preview: true,
+    }),
+  })
+}
+
+export async function onRequestPost({ env, request, waitUntil }) {
   if (!env.VIEWS) return json({ error: 'kv-unbound' }, 503)
 
   let body
@@ -41,6 +75,11 @@ export async function onRequestPost({ env, request }) {
   const key = `${PREFIX}${Date.now()}-${crypto.randomUUID().slice(0, 8)}`
   // conservé un an, largement au-delà du délai de réponse utile
   await env.VIEWS.put(key, JSON.stringify(lead), { expirationTtl: 60 * 60 * 24 * 365 })
+
+  // la demande est en sécurité : l'alerte peut partir après la réponse,
+  // et un échec Telegram ne doit jamais faire échouer l'enregistrement
+  waitUntil(prevenirTelegram(env, lead).catch(() => {}))
+
   return json({ ok: true })
 }
 

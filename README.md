@@ -121,6 +121,18 @@ Kora répond aux visiteurs sur le parcours, les compétences et les projets. Ell
 - emmener le visiteur à une section, ouvrir la fiche d'un projet, ouvrir WhatsApp — elle propose un bouton, le visiteur décide ;
 - recueillir une demande (nom, contact, besoin) et l'enregistrer pour vous.
 
+**Être prévenu sur Telegram à chaque demande :**
+
+1. Dans Telegram, écrire à [@BotFather](https://t.me/BotFather), envoyer `/newbot`, suivre les questions. Il répond avec un jeton du type `123456:ABC-DEF…`.
+2. Ouvrir une conversation avec le bot fraîchement créé et lui envoyer n'importe quel message (sans ça, il n'a pas le droit de vous écrire).
+3. Ouvrir `https://api.telegram.org/bot<jeton>/getUpdates` dans un navigateur et relever le `chat.id` (un nombre).
+4. Cloudflare Dashboard → le projet → Settings → Variables and Secrets, ajouter en **Secret** :
+   - `TELEGRAM_BOT_TOKEN` = le jeton
+   - `TELEGRAM_CHAT_ID` = le `chat.id`
+5. Redéployer.
+
+Tant que ces deux variables sont absentes, rien n'est envoyé et tout continue de fonctionner normalement. Un échec côté Telegram n'empêche jamais l'enregistrement de la demande.
+
 **Relever les demandes reçues :**
 
 ```bash
