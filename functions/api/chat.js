@@ -1,4 +1,5 @@
 import { SYSTEM, profil, vocabulaire } from './_profil'
+import { enregistrerDemande, extraireDemande, texteDuFlux } from './_lead'
 
 const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast'
 const MAX_MESSAGES = 12 // tours conservés dans l'historique
@@ -13,6 +14,23 @@ const json = (data, status = 200) =>
     status,
     headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
   })
+
+/** Enregistre la demande que le modèle a émise, sans dépendre du navigateur. */
+async function capterDemande(flux, env, request) {
+  let texte = ''
+  try {
+    texte = await texteDuFlux(flux)
+  } catch (e) {
+    console.error('lecture du flux interrompue :', String(e).slice(0, 200))
+    return
+  }
+
+  const demande = extraireDemande(texte)
+  if (!demande) return
+
+  const ok = await enregistrerDemande(env, request, demande)
+  console.log(ok ? `demande enregistrée : ${demande.nom}` : 'demande refusée : incomplète')
+}
 
 /** Compteur journalier par adresse IP, pour protéger le quota gratuit. */
 async function overQuota(env, request) {
@@ -30,7 +48,7 @@ export async function onRequestGet({ env }) {
   return json({ ok: Boolean(env.AI), model: MODEL })
 }
 
-export async function onRequestPost({ env, request }) {
+export async function onRequestPost({ env, request, waitUntil }) {
   if (!env.AI) return json({ error: 'ai-unbound' }, 503)
 
   let body
@@ -67,7 +85,13 @@ export async function onRequestPost({ env, request }) {
       stream: true,
     })
 
-    return new Response(stream, {
+    // une copie pour le visiteur, une pour l'analyse : les deux branches
+    // avancent indépendamment, une coupure côté visiteur n'interrompt pas
+    // l'enregistrement
+    const [versVisiteur, versAnalyse] = stream.tee()
+    waitUntil(capterDemande(versAnalyse, env, request))
+
+    return new Response(versVisiteur, {
       headers: {
         'content-type': 'text/event-stream; charset=utf-8',
         'cache-control': 'no-store',

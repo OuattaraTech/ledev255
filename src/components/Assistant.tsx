@@ -8,7 +8,6 @@ import {
   openProject,
   parseReply,
   type Action,
-  type Lead,
 } from '../lib/assistant'
 
 type Msg = { role: 'user' | 'assistant'; raw: string }
@@ -40,7 +39,6 @@ export default function Assistant() {
   const bottom = useRef<HTMLDivElement>(null)
   const input = useRef<HTMLTextAreaElement>(null)
   const abort = useRef<AbortController | null>(null)
-  const sentLeads = useRef<Set<string>>(new Set())
 
   /* ── en plein écran, la page derrière ne doit plus bouger ── */
 
@@ -133,22 +131,6 @@ export default function Assistant() {
     }, narrow ? 260 : 0)
   }, [])
 
-  const sendLead = useCallback(async (lead: Lead) => {
-    const key = `${lead.nom}|${lead.contact}`
-    if (sentLeads.current.has(key)) return
-    sentLeads.current.add(key)
-    try {
-      await fetch('/api/lead', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(lead),
-      })
-      setLeadSent(true)
-    } catch {
-      /* l'assistante a déjà confirmé oralement ; on n'alarme pas le visiteur */
-    }
-  }, [])
-
   /* ── envoi ── */
 
   const send = useCallback(
@@ -219,7 +201,9 @@ export default function Assistant() {
         }
 
         const parsed = parseReply(answer, titleOf)
-        if (parsed.lead) void sendLead(parsed.lead)
+        // L'enregistrement se fait dans /api/chat, sur le flux que le serveur
+        // diffuse : il n'y a plus rien à envoyer d'ici, seulement à confirmer.
+        if (parsed.lead) setLeadSent(true)
       } catch (e) {
         if ((e as Error).name === 'AbortError') return
         setMessages(next)
@@ -230,7 +214,7 @@ export default function Assistant() {
         input.current?.focus()
       }
     },
-    [busy, messages, sendLead],
+    [busy, messages],
   )
 
   const reset = useCallback(() => {
@@ -238,7 +222,6 @@ export default function Assistant() {
     setMessages([])
     setError(null)
     setLeadSent(false)
-    sentLeads.current.clear()
     try {
       sessionStorage.removeItem(STORE)
     } catch {
