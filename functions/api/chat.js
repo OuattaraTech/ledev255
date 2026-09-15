@@ -52,15 +52,32 @@ function heureLocale(request) {
   }
 }
 
-/** Compteur journalier par adresse IP, pour protéger le quota gratuit. */
-async function overQuota(env, request) {
+/**
+ * Compteur journalier par adresse IP, pour protéger le quota gratuit.
+ * La date est dans la clé : chacun repart à zéro à minuit UTC, ce qui est
+ * aussi minuit à Abidjan. Les 26 h ne servent qu'à faire le ménage.
+ */
+const clefDuJour = (request) =>
+  `chat:${new Date().toISOString().slice(0, 10)}:${request.headers.get('cf-connecting-ip') || 'inconnu'}`
+
+/** Le visiteur a-t-il déjà eu ses dix réponses aujourd'hui ? Ne décompte rien. */
+async function quotaAtteint(env, request) {
   if (!env.VIEWS) return false
-  const ip = request.headers.get('cf-connecting-ip') || 'inconnu'
-  const key = `chat:${new Date().toISOString().slice(0, 10)}:${ip}`
+  return (Number(await env.VIEWS.get(clefDuJour(request))) || 0) >= DAILY_LIMIT
+}
+
+/**
+ * Retire un message au visiteur, une fois la réponse acquise.
+ *
+ * Rien n'est retiré à qui n'en a pas obtenu : un refus de Cloudflare — les
+ * neurones du jour épuisés, par exemple — ne doit pas coûter au visiteur un
+ * échange qu'il n'a jamais eu.
+ */
+async function decompter(env, request) {
+  if (!env.VIEWS) return
+  const key = clefDuJour(request)
   const used = Number(await env.VIEWS.get(key)) || 0
-  if (used >= DAILY_LIMIT) return true
   await env.VIEWS.put(key, String(used + 1), { expirationTtl: 60 * 60 * 26 })
-  return false
 }
 
 /** Sonde de disponibilité : le site masque l'assistant si elle échoue. */
@@ -88,7 +105,7 @@ export async function onRequestPost({ env, request, waitUntil }) {
     return json({ error: 'message-manquant' }, 400)
   }
 
-  if (await overQuota(env, request)) {
+  if (await quotaAtteint(env, request)) {
     return json({ error: 'quota' }, 429)
   }
 
@@ -105,6 +122,9 @@ export async function onRequestPost({ env, request, waitUntil }) {
       temperature: 0.3,
       stream: true,
     })
+
+    // le modèle a accepté : c'est seulement maintenant que l'échange se décompte
+    waitUntil(decompter(env, request))
 
     // une copie pour le visiteur, une pour l'analyse : les deux branches
     // avancent indépendamment, une coupure côté visiteur n'interrompt pas
