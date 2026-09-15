@@ -32,6 +32,21 @@ const SECTION_LABELS: Record<string, string> = {
   contact: 'Aller au contact',
 }
 
+/**
+ * Au-delà de cette part de mots communs, une relance est tenue pour un écho
+ * de la question que Kora vient de poser. 0,7 laisse passer les vraies
+ * relances, qui partagent au plus quelques mots outils avec sa réponse.
+ */
+const SEUIL_RECOUVREMENT = 0.7
+
+/** Part des mots d'une relance déjà présents dans la réponse. */
+function recouvrement(question: string, corps: string) {
+  const mots = question.split(' ').filter(Boolean)
+  if (!mots.length) return 0
+  const presents = new Set(corps.split(' '))
+  return mots.filter((m) => presents.has(m)).length / mots.length
+}
+
 /** Forme comparable d'une phrase : sans casse, sans accents, sans ponctuation. */
 function normaliser(v: string) {
   return v
@@ -89,11 +104,13 @@ export function parseReply(raw: string, projectTitle: (id: string) => string | n
 
   // Une relance n'a de sens que si le visiteur peut la poser. Quand Kora vient
   // de poser la question elle-même, la proposer en bouton revient à la lui
-  // renvoyer : on l'écarte.
+  // renvoyer. On écarte la reprise mot pour mot comme la simple reformulation.
   const corps = normaliser(text)
   const relances = followups.filter((q) => {
     const n = normaliser(q)
-    return n.length > 2 && !corps.includes(n)
+    if (n.length <= 2) return false
+    if (corps.includes(n)) return false
+    return recouvrement(n, corps) < SEUIL_RECOUVREMENT
   })
 
   return { text, actions: actions.slice(0, 2), followups: relances, lead }
