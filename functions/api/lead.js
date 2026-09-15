@@ -23,8 +23,9 @@ const json = (data, status = 200) =>
  * la demande reste consultable par `npm run demandes`.
  */
 async function prevenirTelegram(env, lead) {
-  const token = env.TELEGRAM_BOT_TOKEN
-  const chat = env.TELEGRAM_CHAT_ID
+  // un secret collé à la main arrive souvent avec une espace ou un retour à la ligne
+  const token = String(env.TELEGRAM_BOT_TOKEN ?? '').trim()
+  const chat = String(env.TELEGRAM_CHAT_ID ?? '').trim()
   if (!token || !chat) return
 
   const esc = (v) => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -51,7 +52,14 @@ async function prevenirTelegram(env, lead) {
   })
 
   // 401 = jeton révoqué, 400 = chat_id erroné : des pannes muettes si on ne les lève pas
-  if (!r.ok) throw new Error(`Telegram a répondu ${r.status} : ${(await r.text()).slice(0, 200)}`)
+  if (!r.ok) {
+    // l'identifiant qui précède les deux-points désigne le bot ; il n'a rien de secret
+    const bot = token.split(':')[0]
+    throw new Error(
+      `Telegram a répondu ${r.status} (bot ${bot}, jeton de ${token.length} caractères) : ` +
+        (await r.text()).slice(0, 200),
+    )
+  }
 }
 
 export async function onRequestPost({ env, request, waitUntil }) {
