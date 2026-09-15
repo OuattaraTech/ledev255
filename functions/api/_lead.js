@@ -59,6 +59,13 @@ const SANS_OBJET =
 const chiffres = (v) => v.replace(/\D/g, '')
 
 /**
+ * Un contact ne sert qu'à rappeler : c'est une adresse ou un numéro, jamais
+ * autre chose. Le modèle, lui, comble volontiers les trous (« non communiqué »,
+ * un simple espace) ; ce qu'il écrit là doit donc se vérifier.
+ */
+const exploitable = (v) => (v.includes('@') ? /\S+@\S+\.\S/.test(v) : chiffres(v).length >= 6)
+
+/**
  * Rétablit le contact d'après les mots du visiteur.
  *
  * Le modèle recopie mal les longues suites de chiffres : il lui arrive de
@@ -67,6 +74,11 @@ const chiffres = (v) => v.replace(/\D/g, '')
  * un numéro sans rapport reste celui qu'a désigné le modèle.
  */
 function corrigerContact(contact, dit) {
+  // rien d'utilisable dans le marqueur : on prend ce que le visiteur a écrit
+  if (!exploitable(contact)) {
+    return (dit.match(EMAIL) ?? dit.match(TEL) ?? [''])[0].trim()
+  }
+
   if (contact.includes('@')) {
     const attendu = contact.toLowerCase()
     for (const trouve of dit.match(EMAIL) ?? []) {
