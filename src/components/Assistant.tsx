@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { assistant, contact, projects } from '../data/content'
 import { useReducedMotion } from '../hooks/useMotionPreference'
 import {
@@ -20,6 +20,9 @@ const ERRORS: Record<number, string> = {
 
 const titleOf = (id: string) => projects.find((p) => p.id === id)?.title ?? null
 
+/** Hauteur maximale de la zone de saisie, en pixels. Doit suivre `max-h-40`. */
+const SAISIE_MAX = 160
+
 export default function Assistant() {
   const [available, setAvailable] = useState(false)
   const [open, setOpen] = useState(false)
@@ -36,6 +39,16 @@ export default function Assistant() {
   const input = useRef<HTMLTextAreaElement>(null)
   const abort = useRef<AbortController | null>(null)
   const sentLeads = useRef<Set<string>>(new Set())
+
+  /* ── la zone de saisie épouse le volume du texte ── */
+
+  useLayoutEffect(() => {
+    const el = input.current
+    if (!el) return
+    // remise à zéro d'abord : sans elle scrollHeight ne redescend jamais
+    el.style.height = 'auto'
+    el.style.height = `${Math.min(el.scrollHeight, SAISIE_MAX)}px`
+  }, [draft, open])
 
   /* ── disponibilité et mémoire de session ── */
 
@@ -392,7 +405,9 @@ export default function Assistant() {
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
+                    // Entrée revient à la ligne, comme partout ailleurs.
+                    // L'envoi passe par le bouton, ou par Ctrl/⌘ + Entrée.
+                    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                       e.preventDefault()
                       send(draft)
                     }
@@ -400,7 +415,7 @@ export default function Assistant() {
                   rows={1}
                   maxLength={700}
                   placeholder={assistant.placeholder}
-                  className="max-h-28 min-h-[44px] flex-1 resize-none rounded-xl border border-line bg-white/[0.04] px-3.5 py-3 text-[14px] leading-snug text-chalk outline-none transition-colors placeholder:text-muted/70 focus:border-gold-400/50"
+                  className="max-h-40 min-h-[44px] w-full min-w-0 flex-1 resize-none overflow-y-auto rounded-xl border border-line bg-white/[0.04] px-3.5 py-3 text-[14px] leading-snug text-chalk outline-none transition-colors placeholder:text-muted/70 focus:border-gold-400/50"
                 />
                 {busy ? (
                   <button

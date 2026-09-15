@@ -32,6 +32,16 @@ const SECTION_LABELS: Record<string, string> = {
   contact: 'Aller au contact',
 }
 
+/** Forme comparable d'une phrase : sans casse, sans accents, sans ponctuation. */
+function normaliser(v: string) {
+  return v
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
 /**
  * Coupe un marqueur encore incomplet en fin de flux, pour qu'il
  * n'apparaisse pas à l'écran pendant la frappe.
@@ -77,7 +87,16 @@ export function parseReply(raw: string, projectTitle: (id: string) => string | n
 
   const text = trimPartialMarker(raw.replace(MARKER, '')).replace(/\n{3,}/g, '\n\n').trim()
 
-  return { text, actions: actions.slice(0, 2), followups, lead }
+  // Une relance n'a de sens que si le visiteur peut la poser. Quand Kora vient
+  // de poser la question elle-même, la proposer en bouton revient à la lui
+  // renvoyer : on l'écarte.
+  const corps = normaliser(text)
+  const relances = followups.filter((q) => {
+    const n = normaliser(q)
+    return n.length > 2 && !corps.includes(n)
+  })
+
+  return { text, actions: actions.slice(0, 2), followups: relances, lead }
 }
 
 /** Événement écouté par la section Projets pour ouvrir une fiche. */
