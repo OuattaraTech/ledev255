@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { assistant, contact, projects } from '../data/content'
+import { verrouillerPage } from '../lib/defilement'
 import { useReducedMotion } from '../hooks/useMotionPreference'
 import {
   goToSection,
@@ -39,6 +40,16 @@ export default function Assistant() {
   const input = useRef<HTMLTextAreaElement>(null)
   const abort = useRef<AbortController | null>(null)
   const sentLeads = useRef<Set<string>>(new Set())
+
+  /* ── en plein écran, la page derrière ne doit plus bouger ── */
+
+  useEffect(() => {
+    // au-delà de 639 px le chat n'est qu'une carte : la page reste
+    // librement défilable, et les boutons de section en ont besoin
+    if (!open || !window.matchMedia('(max-width: 639px)').matches) return
+    verrouillerPage(true)
+    return () => verrouillerPage(false)
+  }, [open])
 
   /* ── la zone de saisie épouse le volume du texte ── */
 
@@ -302,6 +313,7 @@ export default function Assistant() {
             animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={reduced ? { opacity: 0 } : { opacity: 0, y: 22, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            data-lenis-prevent
             className="fixed inset-0 z-[70] flex flex-col overflow-hidden glass-strong
                        pt-[env(safe-area-inset-top)]
                        shadow-[0_-20px_80px_-30px_rgba(0,0,0,0.95)]
@@ -325,7 +337,7 @@ export default function Assistant() {
             <div
               ref={scroller}
               onScroll={onScroll}
-              className="relative flex-1 space-y-3.5 overflow-y-auto px-4 py-4"
+              className="relative flex-1 space-y-3.5 overflow-y-auto overscroll-contain px-4 py-4"
             >
               <Bubble role="assistant">{assistant.greeting}</Bubble>
 
