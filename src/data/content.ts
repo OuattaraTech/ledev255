@@ -420,11 +420,12 @@ export const assistant = {
   /** Le mot de salutation est ajouté à l'affichage, selon l'heure du visiteur. */
   greeting:
     "je suis Kora, l'assistante d'Ouattara Yaya. Racontez-moi ce que vous voulez construire — et si vous êtes juste de passage, dites-le, je vous fais visiter.",
+  // Ce que le visiteur dirait lui-même : il s'adresse à la maison, pas à un tiers.
   suggestions: [
-    'Quels sont ses projets phares ?',
-    'Il travaille avec quelles technologies ?',
-    'J’ai un projet, il peut m’aider ?',
-    'Comment le contacter ?',
+    'Quels sont vos projets phares ?',
+    'Vous travaillez avec quelles technologies ?',
+    'J’ai un projet, vous pouvez m’aider ?',
+    'Comment vous contacter ?',
   ],
   disclaimer:
     'Kora est une IA. Elle répond à partir du contenu de ce site et peut se tromper.',
