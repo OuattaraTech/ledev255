@@ -53,9 +53,6 @@ export const contact = {
   phone: '+2250779667543',
   phoneDisplay: '+225 07 79 66 75 43',
   whatsapp: 'https://wa.me/message/7YUNZIZGUYNNE1',
-  /** Message pré-rempli du bouton flottant WhatsApp. */
-  whatsappText:
-    'Bonjour Yaya, je vous écris depuis votre portfolio. J’aimerais échanger sur un projet.',
 }
 
 /* ─────────────────────────── PARCOURS ───────────────────────────

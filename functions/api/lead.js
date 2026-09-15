@@ -39,7 +39,7 @@ async function prevenirTelegram(env, lead) {
   if (lead.besoin) lignes.push('', esc(lead.besoin))
   lignes.push('', date)
 
-  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+  const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
@@ -49,6 +49,9 @@ async function prevenirTelegram(env, lead) {
       disable_web_page_preview: true,
     }),
   })
+
+  // 401 = jeton révoqué, 400 = chat_id erroné : des pannes muettes si on ne les lève pas
+  if (!r.ok) throw new Error(`Telegram a répondu ${r.status} : ${(await r.text()).slice(0, 200)}`)
 }
 
 export async function onRequestPost({ env, request, waitUntil }) {
@@ -78,7 +81,13 @@ export async function onRequestPost({ env, request, waitUntil }) {
 
   // la demande est en sécurité : l'alerte peut partir après la réponse,
   // et un échec Telegram ne doit jamais faire échouer l'enregistrement
-  waitUntil(prevenirTelegram(env, lead).catch(() => {}))
+  waitUntil(
+    prevenirTelegram(env, lead).catch((e) => {
+      // le visiteur n'en saura rien, mais la trace existe dans les logs Cloudflare
+      // (`npx wrangler pages deployment tail --project-name ouattaratech`)
+      console.error('alerte Telegram non partie :', e.message)
+    }),
+  )
 
   return json({ ok: true })
 }
