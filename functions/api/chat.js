@@ -72,6 +72,10 @@ export async function onRequestPost({ env, request }) {
       },
     })
   } catch (e) {
-    return json({ error: 'modele', detail: String(e).slice(0, 160) }, 502)
+    // Cause la plus probable : les 10 000 neurones/jour du plan gratuit sont
+    // épuisés. Le détail reste dans les logs Cloudflare, pas dans la réponse :
+    // le visiteur n'a rien à faire d'un message d'erreur technique.
+    console.error('appel au modèle en échec :', String(e).slice(0, 300))
+    return json({ error: 'modele' }, 502)
   }
 }

@@ -16,6 +16,7 @@ type Msg = { role: 'user' | 'assistant'; raw: string }
 const STORE = 'dev225:kora'
 const ERRORS: Record<number, string> = {
   429: "Vous avez atteint la limite de messages pour aujourd'hui. Écrivez directement à Yaya, il répond sous 24 h.",
+  502: "Je ne peux plus répondre aujourd'hui. Inutile d'insister : écrivez à Yaya, il répond sous 24 h.",
   503: 'Je suis momentanément indisponible. Vous pouvez écrire à Yaya en attendant.',
 }
 
@@ -177,7 +178,10 @@ export default function Assistant() {
 
         if (!res.ok || !res.body) {
           setMessages(next)
-          setError(ERRORS[res.status] ?? "Ma réponse n'a pas abouti. Réessayez dans un instant.")
+          setError(
+            ERRORS[res.status] ??
+              "Ma réponse n'a pas abouti. Si cela se répète, écrivez à Yaya, il répond sous 24 h.",
+          )
           return
         }
 
