@@ -27,19 +27,94 @@ export async function texteDuFlux(flux) {
     reste += decodeur.decode(value, { stream: true })
     const lignes = reste.split('\n')
     reste = lignes.pop() ?? ''
-    for (const ligne of lignes) {
-      if (!ligne.startsWith('data:')) continue
-      const charge = ligne.slice(5).trim()
-      if (!charge || charge === '[DONE]') continue
-      try {
-        const morceau = JSON.parse(charge)
-        if (typeof morceau.response === 'string') texte += morceau.response
-      } catch {
-        /* fragment incomplet, complété au tour suivant */
-      }
+    for (const ligne of lignes) ajouter(ligne)
+  }
+  // la dernière ligne n'est pas toujours suivie d'un retour : sans elle,
+  // un marqueur émis en toute fin de réponse serait perdu
+  ajouter(reste)
+  return texte
+
+  function ajouter(ligne) {
+    if (!ligne.startsWith('data:')) return
+    const charge = ligne.slice(5).trim()
+    if (!charge || charge === '[DONE]') return
+    try {
+      const morceau = JSON.parse(charge)
+      if (typeof morceau.response === 'string') texte += morceau.response
+    } catch {
+      /* fragment incomplet, complété au tour suivant */
     }
   }
-  return texte
+}
+
+/** Adresse électronique, telle qu'un visiteur l'écrit dans une phrase. */
+const EMAIL = /[^\s;,<>()«»"]+@[^\s;,<>()«»"]+\.[a-z]{2,}/gi
+/** Numéro de téléphone : huit chiffres au moins, écrits avec ou sans séparateurs. */
+const TEL = /\+?\d[\d\s.\-]{6,}\d/g
+
+/** Marqueurs de besoin vide que le modèle produit quand il n'a rien demandé. */
+const SANS_OBJET =
+  /^(?:le\s+)?(?:projet|besoin)?\s*(?:non\s+(?:sp[ée]cifi[ée]|pr[ée]cis[ée]|renseign[ée]|communiqu[ée])|[àa]\s+pr[ée]ciser|inconnu|non\s+d[ée]fini)\.?$/i
+
+const chiffres = (v) => v.replace(/\D/g, '')
+
+/**
+ * Rétablit le contact d'après les mots du visiteur.
+ *
+ * Le modèle recopie mal les longues suites de chiffres : il lui arrive de
+ * n'en garder que le début (« 075 » pour « 0754327898 »). Le visiteur, lui,
+ * a écrit son numéro en entier. On ne remplace que si l'un prolonge l'autre :
+ * un numéro sans rapport reste celui qu'a désigné le modèle.
+ */
+function corrigerContact(contact, dit) {
+  if (contact.includes('@')) {
+    const attendu = contact.toLowerCase()
+    for (const trouve of dit.match(EMAIL) ?? []) {
+      if (trouve.length > contact.length && trouve.toLowerCase().startsWith(attendu)) return trouve
+    }
+    return contact
+  }
+
+  const attendu = chiffres(contact)
+  if (attendu.length < 2) return contact
+  for (const trouve of dit.match(TEL) ?? []) {
+    const n = chiffres(trouve)
+    if (n.length > attendu.length && (n.startsWith(attendu) || n.endsWith(attendu))) {
+      return trouve.trim()
+    }
+  }
+  return contact
+}
+
+/**
+ * Les mots par lesquels le visiteur a ouvert, à défaut d'un besoin.
+ * C'est presque toujours là qu'il dit ce qu'il veut ; « bonjour » et les
+ * messages qui ne portent que des coordonnées ne comptent pas.
+ */
+function motsDuVisiteur(messages) {
+  const substance = (m) => m.replace(EMAIL, ' ').replace(TEL, ' ').replace(/\s+/g, ' ').trim()
+  return (
+    messages
+      .map((m) => String(m).trim().replace(/\s+/g, ' '))
+      .find((m) => substance(m).length > 12) ?? ''
+  )
+}
+
+/**
+ * Confronte la demande à ce que le visiteur a réellement écrit.
+ * Le marqueur déclenche l'enregistrement ; les coordonnées, elles, ne
+ * dépendent plus de la recopie du modèle.
+ */
+export function fiabiliser(demande, messages = []) {
+  const dit = messages.join('\n')
+  if (!dit) return demande
+
+  const contact = corrigerContact(demande.contact, dit)
+  const vide = !demande.besoin || SANS_OBJET.test(demande.besoin)
+  // plutôt qu'un « projet non spécifié » qui n'apprend rien à Yaya, ses mots à lui
+  const besoin = vide ? motsDuVisiteur(messages) : demande.besoin
+
+  return { ...demande, contact, besoin }
 }
 
 /** Lit le marqueur de demande dans une réponse. Rend null s'il est absent ou inexploitable. */

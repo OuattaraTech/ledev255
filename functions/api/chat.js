@@ -1,5 +1,5 @@
 import { SYSTEM, profil, vocabulaire } from './_profil'
-import { enregistrerDemande, extraireDemande, texteDuFlux } from './_lead'
+import { enregistrerDemande, extraireDemande, fiabiliser, texteDuFlux } from './_lead'
 
 const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast'
 const MAX_MESSAGES = 12 // tours conservés dans l'historique
@@ -16,7 +16,7 @@ const json = (data, status = 200) =>
   })
 
 /** Enregistre la demande que le modèle a émise, sans dépendre du navigateur. */
-async function capterDemande(flux, env, request) {
+async function capterDemande(flux, env, request, ditParLeVisiteur) {
   let texte = ''
   try {
     texte = await texteDuFlux(flux)
@@ -25,9 +25,12 @@ async function capterDemande(flux, env, request) {
     return
   }
 
-  const demande = extraireDemande(texte)
-  if (!demande) return
+  const brut = extraireDemande(texte)
+  if (!brut) return
 
+  // le marqueur dit qu'il y a une demande ; les coordonnées, elles, se
+  // relisent dans les messages du visiteur
+  const demande = fiabiliser(brut, ditParLeVisiteur)
   const ok = await enregistrerDemande(env, request, demande)
   console.log(ok ? `demande enregistrée : ${demande.nom}` : 'demande refusée : incomplète')
 }
@@ -107,7 +110,8 @@ export async function onRequestPost({ env, request, waitUntil }) {
     // avancent indépendamment, une coupure côté visiteur n'interrompt pas
     // l'enregistrement
     const [versVisiteur, versAnalyse] = stream.tee()
-    waitUntil(capterDemande(versAnalyse, env, request))
+    const dits = messages.filter((m) => m.role === 'user').map((m) => m.content)
+    waitUntil(capterDemande(versAnalyse, env, request, dits))
 
     return new Response(versVisiteur, {
       headers: {
