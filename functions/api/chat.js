@@ -3,7 +3,10 @@ import { SYSTEM, profil, vocabulaire } from './_profil'
 const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast'
 const MAX_MESSAGES = 12 // tours conservés dans l'historique
 const MAX_CHARS = 700 // longueur d'une question
-const DAILY_LIMIT = 30 // messages par visiteur et par jour
+// Messages par visiteur et par jour. Calibré sur le plafond de Cloudflare
+// (10 000 neurones/jour, soit ~40 à 70 échanges pour tout le site) : à 30,
+// deux visiteurs bavards rendaient Kora muette pour tous les autres.
+const DAILY_LIMIT = 10
 
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), {

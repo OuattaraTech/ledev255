@@ -143,7 +143,9 @@ Le script lit le stockage KV du projet ; votre authentification Cloudflare suffi
 
 Pour les consulter depuis un navigateur, définir une variable `LEADS_KEY` dans Cloudflare (Settings → Variables and Secrets) puis ouvrir `https://…/api/lead?k=<valeur>`. Sans cette variable, la route refuse tout accès.
 
-**Garde-fous :** 30 messages par visiteur et par jour, longueur de question et historique plafonnés, refus des tentatives de détournement de consigne, interdiction d'inventer.
+**Garde-fous :** 10 messages par visiteur et par jour, longueur de question et historique plafonnés, refus des tentatives de détournement de consigne, interdiction d'inventer.
+
+Cette limite de 10 n'est pas arbitraire. Workers AI offre 10 000 neurones par jour, et c'est un plafond dur : au-delà, les appels échouent jusqu'au lendemain. Un échange coûte de 140 à 270 neurones selon la longueur de l'historique, soit **40 à 70 échanges par jour pour l'ensemble du site**. Le poste principal est le prompt système, renvoyé à chaque message : l'alléger reste le levier le plus efficace pour servir plus de monde.
 
 ---
 
