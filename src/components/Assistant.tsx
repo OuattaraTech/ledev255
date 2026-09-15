@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { assistant, contact, identity, projects } from '../data/content'
+import { assistant, contact, projects } from '../data/content'
 import { useReducedMotion } from '../hooks/useMotionPreference'
 import {
   goToSection,
@@ -250,7 +250,7 @@ export default function Assistant() {
             }}
           >
             <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full bg-void/90">
-              <SparkIcon className="h-[22px] w-[22px]" />
+              <img src={assistant.avatar} alt="" aria-hidden className="h-[38px] w-[38px] rounded-full object-cover" />
               <span className="absolute -right-0.5 -top-0.5 flex h-3 w-3">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
                 <span className="relative inline-flex h-3 w-3 rounded-full border-2 border-void bg-emerald-400" />
@@ -448,8 +448,8 @@ function Header({
 }) {
   return (
     <div className="flex shrink-0 items-center gap-3 border-b border-line px-4 py-3">
-      <span className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-violet-700/60 to-gold-500/30">
-        <img src={identity.logoMark} alt="" aria-hidden className="h-6 w-auto" />
+      <span className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full">
+        <img src={assistant.avatar} alt="" aria-hidden className="h-10 w-10 rounded-full object-cover" />
       </span>
       <div className="min-w-0 flex-1">
         <p className="truncate font-display text-[15px] font-semibold text-chalk">
@@ -544,8 +544,8 @@ function Bubble({ role, children }: { role: 'user' | 'assistant'; children: Reac
   }
   return (
     <div className="flex items-start gap-2">
-      <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-violet-700/60 to-gold-500/30">
-        <img src={identity.logoMark} alt="" aria-hidden className="h-4 w-auto" />
+      <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full">
+        <img src={assistant.avatar} alt="" aria-hidden className="h-7 w-7 rounded-full object-cover" />
       </span>
       <div className="max-w-[86%] rounded-2xl rounded-bl-sm border border-line bg-white/[0.04] px-3.5 py-2.5 text-[13.5px] leading-relaxed text-chalk/90">
         {children}
@@ -606,18 +606,3 @@ function Typing() {
   )
 }
 
-function SparkIcon({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <path d="M12 2.6 13.9 9 20.3 10.9 13.9 12.8 12 19.2 10.1 12.8 3.7 10.9 10.1 9Z" fill="url(#spark)" />
-      <path d="M18.4 15.2 19.3 18 22.1 18.9 19.3 19.8 18.4 22.6 17.5 19.8 14.7 18.9 17.5 18Z" fill="#f5c451" />
-      <defs>
-        <linearGradient id="spark" x1="3" y1="2" x2="20" y2="19" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#ffe6ad" />
-          <stop offset="0.45" stopColor="#f5c451" />
-          <stop offset="1" stopColor="#9c7dff" />
-        </linearGradient>
-      </defs>
-    </svg>
-  )
-}

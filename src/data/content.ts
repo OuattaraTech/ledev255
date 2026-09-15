@@ -419,6 +419,7 @@ export const services = [
 export const assistant = {
   name: 'Kora',
   role: 'Assistante de Yaya',
+  avatar: '/imgs/kora.webp',
   greeting:
     "Bonjour, je suis Kora. Je travaille avec Ouattara Yaya : je connais son parcours, ses projets et ce qu'il peut construire. Qu'est-ce qui vous amène ?",
   suggestions: [
