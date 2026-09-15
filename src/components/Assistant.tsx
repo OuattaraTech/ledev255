@@ -302,10 +302,11 @@ export default function Assistant() {
             animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={reduced ? { opacity: 0 } : { opacity: 0, y: 22, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-x-0 bottom-0 top-14 z-[70] flex flex-col overflow-hidden rounded-t-3xl glass-strong
+            className="fixed inset-0 z-[70] flex flex-col overflow-hidden glass-strong
+                       pt-[env(safe-area-inset-top)]
                        shadow-[0_-20px_80px_-30px_rgba(0,0,0,0.95)]
-                       sm:inset-x-auto sm:right-7 sm:top-auto sm:h-[min(660px,calc(100dvh-7rem))] sm:w-[400px] sm:rounded-3xl"
-            style={{ bottom: 'max(0px, env(safe-area-inset-bottom))' }}
+                       sm:inset-auto sm:bottom-0 sm:right-7 sm:h-[min(660px,calc(100dvh-7rem))] sm:w-[400px]
+                       sm:rounded-3xl sm:pt-0"
           >
             {/* poignée mobile */}
             <button
@@ -397,7 +398,8 @@ export default function Assistant() {
                 e.preventDefault()
                 send(draft)
               }}
-              className="shrink-0 border-t border-line p-3"
+              className="shrink-0 border-t border-line p-3
+                         pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-3"
             >
               <div className="flex items-end gap-2">
                 <textarea
