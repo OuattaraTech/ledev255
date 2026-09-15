@@ -318,7 +318,7 @@ export default function Assistant() {
             exit={reduced ? { opacity: 0 } : { opacity: 0, y: 22, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             data-lenis-prevent
-            className="fixed inset-0 z-[70] flex flex-col overflow-hidden glass-strong
+            className="fixed inset-x-0 top-0 h-[100dvh] z-[70] flex flex-col overflow-hidden glass-strong
                        pt-[env(safe-area-inset-top)]
                        shadow-[0_-20px_80px_-30px_rgba(0,0,0,0.95)]
                        sm:inset-auto sm:bottom-0 sm:right-7 sm:h-[min(660px,calc(100dvh-7rem))] sm:w-[400px]

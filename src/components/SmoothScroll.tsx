@@ -4,14 +4,34 @@ import { VERROU_DEFILEMENT } from '../lib/defilement'
 import { useReducedMotion } from '../hooks/useMotionPreference'
 
 /**
- * Immobilise la page sans perdre sa position : `overflow` sur les deux
- * éléments racines, plutôt qu'un `position: fixed` qui remettrait le
- * document en haut et fausserait le scrollY que Lenis suit.
+ * Immobilise la page.
+ *
+ * Safari iOS ignore `overflow: hidden` sur les racines : seul un
+ * `position: fixed` sur <body> l'arrête vraiment. Le défaut de cette
+ * méthode est qu'elle ramène le document en haut — on mémorise donc la
+ * position pour la rendre au déverrouillage.
  */
+let positionMemorisee = 0
+
 function figerDocument(actif: boolean) {
-  const v = actif ? 'hidden' : ''
-  document.documentElement.style.overflow = v
-  document.body.style.overflow = v
+  const { body, documentElement: racine } = document
+  if (actif) {
+    positionMemorisee = window.scrollY
+    body.style.position = 'fixed'
+    body.style.top = `-${positionMemorisee}px`
+    body.style.left = '0'
+    body.style.right = '0'
+    racine.style.overflow = 'hidden'
+    return
+  }
+  body.style.position = ''
+  body.style.top = ''
+  body.style.left = ''
+  body.style.right = ''
+  racine.style.overflow = ''
+  // `auto` et non `smooth` : le retour doit être instantané, sinon on voit
+  // la page remonter depuis le haut au moment où le chat se referme
+  window.scrollTo({ top: positionMemorisee, behavior: 'auto' })
 }
 
 export default function SmoothScroll() {
@@ -60,9 +80,18 @@ export default function SmoothScroll() {
     // arrêter Lenis ne suffit pas : le défilement natif prendrait le relais
     const onVerrou = (e: Event) => {
       const actif = (e as CustomEvent<boolean>).detail
-      figerDocument(actif)
-      if (actif) lenis.stop()
-      else lenis.start()
+      if (actif) {
+        lenis.stop()
+        figerDocument(true)
+      } else {
+        figerDocument(false)
+        lenis.start()
+        // Pendant le verrou, le document est passé à 0 : le navigateur a émis
+        // un événement de défilement que Lenis a pu enregistrer. On lui
+        // réaffirme la vraie position, sinon il la rattrape en douceur à
+        // l'écran. `force` parce que l'appel doit passer même à l'arrêt.
+        lenis.scrollTo(positionMemorisee, { immediate: true, force: true })
+      }
     }
     window.addEventListener(VERROU_DEFILEMENT, onVerrou)
 
