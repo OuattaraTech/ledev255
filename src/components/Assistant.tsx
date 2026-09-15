@@ -429,7 +429,7 @@ export default function Assistant() {
                   rows={1}
                   maxLength={700}
                   placeholder={assistant.placeholder}
-                  className="max-h-40 min-h-[44px] w-full min-w-0 flex-1 resize-none overflow-y-auto rounded-xl border border-line bg-white/[0.04] px-3.5 py-3 text-[14px] leading-snug text-chalk outline-none transition-colors placeholder:text-muted/70 focus:border-gold-400/50"
+                  className="max-h-40 min-h-[44px] w-full min-w-0 flex-1 resize-none overflow-y-auto rounded-xl border border-line bg-white/[0.04] px-3.5 py-3 text-[16px] leading-snug text-chalk outline-none sm:text-[14px] transition-colors placeholder:text-muted/70 focus:border-gold-400/50"
                 />
                 {busy ? (
                   <button

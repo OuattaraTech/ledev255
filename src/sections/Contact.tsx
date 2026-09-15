@@ -25,7 +25,7 @@ function Field({
   placeholder?: string
 }) {
   const base =
-    'peer w-full rounded-xl border border-line bg-white/[0.03] px-4 pb-2.5 pt-6 text-[15px] text-chalk placeholder-transparent outline-none transition-colors duration-300 focus:border-gold-400/60'
+    'peer w-full rounded-xl border border-line bg-white/[0.03] px-4 pb-2.5 pt-6 text-[16px] text-chalk placeholder-transparent sm:text-[15px] outline-none transition-colors duration-300 focus:border-gold-400/60'
   return (
     <div className="relative">
       {textarea ? (
