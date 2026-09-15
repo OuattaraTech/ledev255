@@ -429,7 +429,7 @@ export const assistant = {
   disclaimer:
     'Kora est une IA. Elle répond à partir du contenu de ce site et peut se tromper.',
   placeholder: 'Écrivez votre message…',
-  leadConfirm: 'Demande transmise à Yaya.',
+  leadConfirm: 'Demande transmise. Nous revenons vers vous.',
 }
 
 export const navLinks = [

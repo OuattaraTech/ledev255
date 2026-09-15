@@ -22,13 +22,14 @@ export type Parsed = {
 
 const MARKER = /\[\[(VOIR|PROJET|CONTACT|WHATSAPP|LEAD|SUIVANT)(?::([^\]]*))?\]\]/g
 
+// Kora parle au nom de la maison : les boutons aussi.
 const SECTION_LABELS: Record<string, string> = {
   accueil: 'Revenir en haut',
-  parcours: 'Voir son parcours',
-  competences: 'Voir ses compétences',
-  ia: 'Voir son usage de l’IA',
-  projets: 'Voir ses projets',
-  encours: 'Voir ce qu’il construit',
+  parcours: 'Voir notre parcours',
+  competences: 'Voir nos compétences',
+  ia: 'Voir notre usage de l’IA',
+  projets: 'Voir nos projets',
+  encours: 'Voir ce que nous construisons',
   contact: 'Aller au contact',
 }
 
@@ -84,7 +85,7 @@ export function parseReply(raw: string, projectTitle: (id: string) => string | n
       const title = projectTitle(arg)
       if (title) actions.push({ kind: 'project', id: arg, label: `Ouvrir ${title}` })
     } else if (kind === 'CONTACT') {
-      actions.push({ kind: 'contact', label: 'Écrire à Yaya' })
+      actions.push({ kind: 'contact', label: 'Nous écrire' })
     } else if (kind === 'WHATSAPP' && arg) {
       actions.push({ kind: 'whatsapp', text: arg, label: 'Ouvrir WhatsApp' })
     } else if (kind === 'SUIVANT' && arg) {
