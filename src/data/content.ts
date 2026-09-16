@@ -271,6 +271,29 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: 'kobotoolbox-mcp',
+    title: 'Serveur MCP KoboToolbox',
+    category: 'IA & Analyse de données',
+    monogram: 'KO',
+    image: '/imgs/projets/kobotoolbox-mcp.webp',
+    summary:
+      "Serveur MCP qui branche Claude sur KoboToolbox : créer les questionnaires d'enquête, analyser les réponses et livrer les rapports Excel, Word et PDF — depuis une conversation.",
+    description:
+      "KoboToolbox est l'outil de collecte de terrain des ONG et des projets de développement. Entre la fin de la collecte et le rapport, il reste pourtant l'export, la traduction des codes, les tableaux croisés et la mise en forme : souvent plusieurs jours de tableur. Ce serveur confie ce travail à Claude. Vingt-sept outils couvrent le cycle complet, de la création du questionnaire XLSForm jusqu'au rapport livré. Le partage des rôles est strict : Claude rédige l'analyse et déclare quels tableaux et quels graphiques produire, le serveur calcule tous les chiffres depuis les soumissions réelles. Les nombres du rapport ne peuvent donc pas diverger des données.",
+    stack: ['TypeScript', 'Node.js', 'MCP SDK', 'Zod', 'Python', 'XlsxWriter', 'Matplotlib'],
+    highlights: [
+      'Le cycle entier : créer le questionnaire, le déployer, suivre la collecte, analyser, livrer',
+      'Classeur Excel à graphiques natifs et éditables, rapport Word et PDF',
+      'Claude rédige l’analyse, le serveur calcule les chiffres : aucun écart possible avec les données',
+      'Données nettoyées automatiquement — codes traduits en libellés, groupes aplatis, rapport de qualité',
+      'Liens de collecte, QR code imprimable et ouverture aux réponses anonymes',
+      'XLSForm validé avant l’envoi : les erreurs sont signalées d’un coup, avec la question fautive',
+    ],
+    links: { repo: 'https://github.com/OuattaraTech/kobotoolbox-mcp-server' },
+    accent: 'mixed',
+    featured: true,
+  },
+  {
     id: 'masjid-finder',
     title: 'Masjid Finder',
     category: 'Mobilité & Communauté',
