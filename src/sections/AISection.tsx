@@ -36,7 +36,14 @@ export default function AISection() {
 
         <div className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5">
           {aiPillars.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.07} direction={i % 2 ? 'left' : 'right'}>
+            <Reveal
+              key={p.title}
+              delay={i * 0.07}
+              direction={i % 2 ? 'left' : 'right'}
+              // en nombre impair, la dernière carte prend toute la largeur
+              // plutôt que de rester seule à côté d'un vide
+              className={i === aiPillars.length - 1 && i % 2 === 0 ? 'sm:col-span-2' : ''}
+            >
               <TiltCard className="group h-full rounded-3xl" intensity={7}>
                 <div className="grad-border relative h-full overflow-hidden rounded-3xl glass p-6 transition-colors duration-500 sm:p-7">
                   <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(125,85,255,0.28),transparent_70%)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />

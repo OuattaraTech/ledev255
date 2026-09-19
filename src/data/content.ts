@@ -179,6 +179,12 @@ export const aiPillars = [
     tools: ['Claude API', 'OpenAI API', 'LangChain', 'RAG / Embeddings'],
   },
   {
+    icon: '⇄',
+    title: 'Serveurs MCP & agents outillés',
+    text: "Le protocole MCP donne à un assistant les outils d'un métier. Mon serveur KoboToolbox branche Claude sur les enquêtes de terrain : l'IA rédige l'analyse, le serveur calcule les chiffres depuis les réponses réelles.",
+    tools: ['MCP SDK', 'Claude Code', 'TypeScript', 'APIs métier'],
+  },
+  {
     icon: '✦',
     title: 'Contenu & design assistés',
     text: "Génération d'assets, maquettes, copies marketing et supports visuels. Un produit ne se vend pas sans une image nette — l'IA me permet de tenir ce niveau seul.",
