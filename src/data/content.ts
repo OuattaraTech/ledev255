@@ -341,6 +341,29 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: 'chasseur-emploi',
+    title: "Agent chasseur d'emploi",
+    category: 'Agent IA & Candidatures',
+    year: '2026',
+    monogram: 'CE',
+    summary:
+      "Un agent qui lit les offres collectées par le robot de veille, adapte le CV à chacune et prépare le dossier — sans jamais rien inventer ni rien envoyer sans accord.",
+    description:
+      "Trouver les offres ne suffit pas : reste à adapter son CV à chacune, ce qui prend une vingtaine de minutes et décourage vite. Cet agent reprend là où s'arrête le robot de veille : il lit sa base, récupère le texte complet de l'annonce, puis compose un dossier ciblé — un CV mis en page pour un lecteur humain, un second dépouillé pour les logiciels d'analyse de candidatures, et la lettre si l'offre en demande une. Deux garde-fous encadrent le tout. Aucune compétence, aucun projet, aucune date ne peut sortir du profil de référence : le modèle réordonne et reformule la mise en avant, l'outil refuse tout ajout. Et rien ne part par email sans validation explicite — dans Telegram, deux boutons, et l'agent attend. La boucle de décision est écrite à la main plutôt qu'empruntée à un cadriciel, et quatre fournisseurs de modèles sont interchangeables derrière une même interface.",
+    stack: ['Python', 'OpenRouter', 'Telegram Bot API', 'SQLite', 'python-docx', 'systemd'],
+    highlights: [
+      "Deux CV par candidature : l'un mis en page, l'autre lisible par les logiciels de recrutement",
+      'Aucune invention possible : tout écart au profil de référence est refusé',
+      'Rien ne part sans validation — deux boutons dans Telegram, et la demande expire seule',
+      "S'appuie sur la base du robot de veille au lieu de refaire la collecte",
+      'Boucle agentique écrite à la main, quatre fournisseurs de modèles interchangeables',
+      'Hébergé sur VPS, piloté depuis le téléphone, 142 tests sans appel réseau',
+    ],
+    links: {},
+    accent: 'violet',
+    featured: true,
+  },
+  {
     id: 'robot-emploi',
     title: 'Robot Emploi CI',
     category: 'Automatisation & Veille',
