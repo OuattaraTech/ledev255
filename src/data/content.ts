@@ -372,10 +372,10 @@ export const projects: Project[] = [
     summary:
       "Un robot qui surveille en continu les sites d'emploi ivoiriens et envoie par email les offres qui correspondent à un profil précis.",
     description:
-      "Chercher un emploi en Côte d'Ivoire, c'est visiter les mêmes sites plusieurs fois par jour et relire les mêmes annonces. Ce script tourne à la place du candidat, vingt-quatre heures sur vingt-quatre : il parcourt EmploiCI, Afriwork, LinkedIn et JobnetAfrica, filtre chaque annonce selon le profil et les compétences visées, écarte celles déjà vues, puis compose toutes les six heures un rapport envoyé par email — avec, pour chaque offre, le lien direct pour postuler. Les résultats partent aussi en Excel et en notification Telegram.",
+      "Chercher un emploi en Côte d'Ivoire, c'est visiter les mêmes sites plusieurs fois par jour et relire les mêmes annonces. Hébergé sur un serveur, ce robot tourne à la place du candidat vingt-quatre heures sur vingt-quatre : il parcourt LinkedIn, Novojob et JobnetAfrica, filtre chaque annonce selon le profil et les compétences visées, écarte celles déjà vues, puis compose toutes les six heures un rapport envoyé par email — avec, pour chaque offre, le lien direct pour postuler. Les résultats partent aussi en Excel et en notification Telegram.",
     stack: ['Python', 'Scraping', 'SMTP', 'Telegram Bot API', 'Excel'],
     highlights: [
-      'Veille continue sur EmploiCI, Afriwork, LinkedIn et JobnetAfrica',
+      'Veille continue sur LinkedIn, Novojob et JobnetAfrica',
       'Filtrage par profil, compétences et mots-clés',
       'Rapport email toutes les six heures, lien direct pour postuler',
       'Mémoire des annonces déjà vues : aucun doublon d’un rapport à l’autre',
