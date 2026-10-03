@@ -386,6 +386,30 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: '225technova',
+    title: '225 TECHNOVA',
+    category: 'Site vitrine & Motion design',
+    year: '2026',
+    monogram: 'TN',
+    image: '/imgs/projets/225technova.webp',
+    summary:
+      "Site vitrine et vidéo publicitaire d'une entreprise de climatisation, de froid et d'électricité à Abidjan, pensés pour transformer la visite en demande de devis.",
+    description:
+      "L'entreprise changeait de nom : il fallait reprendre toute l'identité du site, du logo à l'image de partage, sans repartir de zéro. Le site, écrit sans framework et pensé d'abord pour le téléphone, mène chaque visiteur vers une demande de devis gratuit envoyée sur WhatsApp avec un message déjà rédigé. La vidéo publicitaire de soixante-dix secondes est entièrement animée en code : une page web décrit la scène, un navigateur piloté la rend image par image, puis FFmpeg l'assemble. La voix off est transcrite mot à mot pour que chaque visuel apparaisse au moment exact où il est prononcé, et la musique s'efface automatiquement quand la voix parle.",
+    stack: ['HTML', 'CSS', 'JavaScript', 'Playwright', 'FFmpeg', 'Whisper', 'Cloudflare Pages'],
+    highlights: [
+      'Refonte de marque complète : logo détouré, favicons, charte couleur et image de partage',
+      'Demande de devis gratuit envoyée sur WhatsApp, message prérempli',
+      'Vidéo de 70 s animée en code et rendue image par image',
+      'Visuels calés au mot près sur la voix off grâce à une transcription horodatée',
+      'Mixage automatique : la musique s’efface sous la voix, volume au standard des réseaux',
+      'Vidéo en 16:9 sur ordinateur, carrée sur téléphone, chargée seulement au clic',
+    ],
+    links: { site: 'https://225technova.pages.dev/' },
+    accent: 'mixed',
+    featured: true,
+  },
+  {
     id: 'generateur-qrcode',
     title: 'Générateur de QR Code',
     category: 'Outil web',
